@@ -12,6 +12,8 @@ SSH: Secure Shell
 - [OpenSSH](https://www.openssh.com/)
   - built-in on Linux and Mac OS
   - [OpenSSH - Microsoft Learn](https://learn.microsoft.com/en-us/windows/terminal/tutorials/ssh) maybe pre-installed on Windows.
+  - iOS: [ShellFish](https://apps.apple.com/us/app/ssh-client-secure-shellfish/id1336634154), [Termius](https://apps.apple.com/us/app/termius-ssh-shell-console-terminal/id549039908)
+  - Android: [Termux](https://github.com/termux/termux-app), [Termius](https://play.google.com/store/apps/details?id=com.server.auditor.ssh.client), [Juice SSH](https://play.google.com/store/apps/details?id=com.sonelli.juicessh)
 
 ```bash
 ssh username@server

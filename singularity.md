@@ -10,6 +10,39 @@
 2. `.sif` a system image
 3. `.ext3` overlay file which can be mounted loaded into  
 
+## Beautify in singularity
+
+- add colors
+- show present working directory with `PS1`
+
+```
+force_color_prompt=yes
+export PS1="Singularity \[\e[0m\]\[\e[01;35m\]\w\[\e[0m\]\[\e[01;37m\] > "
+alias ls="ls --color=auto"
+```
+
+## VS Code
+
+- [launching singularity container using VS Code - StackOverflow](https://stackoverflow.com/questions/63604427/launching-a-singularity-container-remotely-using-visual-studio-code).
+
+in `~/.ssh/config`
+
+```
+Host greene-overlay
+  HostName greene.hpc.nyu.edu
+  User zz999
+  IdentityFile ~/.ssh/greene
+  ForwardAgent yes
+  RemoteCommand singularity shell --overlay /scratch/zz999/container/overlay.ext3 /home/zz999/template/neo.sif
+  RequestTTY yes
+```
+
+in vscode config.json
+
+```json
+"remote.SSH.enableRemoteCommand": true,
+```
+
 ## Build your own image
 
 1. install [SingularityCE](https://github.com/sylabs/singularity) on your local machine
