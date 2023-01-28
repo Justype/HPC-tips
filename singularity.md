@@ -58,7 +58,7 @@ From: ubuntu:22.04
 
 ## neovim
 
-- HPC also use singularity to run neovim, but the version is `0.6.x`. Some plugin requires `0.8.x`.
+- HPC also use singularity to run neovim, but the version is `0.6.x`. Some plugins require `0.8.x`.
 - I built a image using [neo.def](neo.def). the size of `.sif` is 240M.
 - You can install neovim plugin in singularity overlay.
 
