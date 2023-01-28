@@ -98,8 +98,8 @@ Because the data is binary in computer. So are these permissions.
 
 ## Change Permission
 
-- `chown` – changes the owner
-- `chgrp` – changes the group
+- `chown` – change the owner
+- `chgrp` – change the group
 - `chmod` – change read, write, and execute permissions
 
 ```

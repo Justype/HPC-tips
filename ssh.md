@@ -105,17 +105,17 @@ ssh greene
 instead of
 
 ```bash
-ssh -i ~/.ssh/greene <your netID>@gw.hpc.nyu.edu
+ssh -i ~/.ssh/greene <your netID>@greene.hpc.nyu.edu
 ```
 
 # Shortcut On Windows Terminal
 
 1. Add new profile
 2. Change the `name`
-3. Edit `command line` to `ssh xxx`
+3. Edit `command line` to `ssh xxx` or `ssh -i key user@server`
 4. [Change the Icon]
 5. Save
-6. login with one click
+6. Login with one click
 
 ![windows-terminal-shortcut](assets/windows-terminal-shortcut.jpg)
 
