@@ -43,7 +43,7 @@ You can use `ssh -i <path to the private key> user@host` to login without passwo
 ```bash
 cd ~ # go to home directory
 ssh-keygen -f .ssh/id_rsa -N "" # generate key pairs
-scp .ssh/id_rsa.pub user@server:.ssh/authorized_keys # copy the public key to the server
+ssh-copy-id -i .ssh/id_rsa user@server # add public key to the host, not working on Windows
 ssh -i ~/.ssh/id_rsa user@server # login to the server
 ```
 
@@ -52,19 +52,11 @@ You can change zz999 to your netID.
 ```bash
 cd ~ # go to home directory
 ssh-keygen -f .ssh/greene -N "" # generate key pairs
-scp .ssh/greene.pub zz999@greene.hpc.nyu.edu:.ssh/authorized_keys # copy the public key to the server
+ssh-copy-id -i ~/.ssh/greene zz999@greene.hpc.nyu.edu # add public key to the host
 ssh -i ~/.ssh/greene zz999@greene.hpc.nyu.edu # login to the server
 ```
 
-Here I copied the key directly, but I should append it. [Append public key - StackOverflow](https://stackoverflow.com/questions/23591083/how-to-append-authorized-keys-on-the-remote-server-with-id-rsa-pub-key)
-
 Or you can copy all the text in public key, and add it to `authorized_keys`
-
-```bash
-ssh user@server "echo \"`cat ~/.ssh/id_rsa.pub`\" >> .ssh/authorized_keys"
-```
-
-It does not work on powershell. You can also copy to the server and append it. The server may have `id_rsa.pub`. Backup in advance, or use a different name.
 
 ```bash
 cd ~
@@ -82,9 +74,10 @@ rm ~/.ssh/greene.pub  # delete the public key
 ### Permission on SSH key
 
 **DO NOT** share your private keys with anyone
-  - `chmod 600 ~/.ssh/id_rsa`
-  - `chmod 644 ~/.ssh/id_rsa.pub` or `600` if you want
-  - `chmod 700 ~/.ssh`
+
+- `chmod 600 ~/.ssh/id_rsa`
+- `chmod 644 ~/.ssh/id_rsa.pub` or `600` if you want
+- `chmod 700 ~/.ssh`
 
 ## Config File
 
@@ -162,6 +155,7 @@ possible reasons:
 1. man-in-the-middle attack
 2. server changed
 3. different servers with same domain
+   - appears on Windows and Mac OS, not on Linux
 
 ### Different servers with same domain
 
@@ -206,3 +200,4 @@ log3.greene.hpc.nyu.edu ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBeEkL/sU86PJHQnqCb7
   - some parameters do not work properly
 - `scp` cannot recognize `~`
   - `~/.ssh/greene.pub: No such file or directory`
+- no `ssh-copy-id`

@@ -56,13 +56,13 @@ Tips for arm VPS
 
 You can also use VS Code on HPC's compute node, see [VS Code - NYU HPC](https://sites.google.com/nyu.edu/nyu-hpc/training-support/general-hpc-topics/vs-code). But the python extension has about 10,000 files, while the home quota is 30,000. 
 
+- Install extensions on `$SCRATCH`
 - Maybe you can install extensions in singularity overlay, but I failed. See [launching singularity container using VS Code - StackOverflow](https://stackoverflow.com/questions/63604427/launching-a-singularity-container-remotely-using-visual-studio-code).
-- or install extensions on $SCRATCH
 
 ```json
 "remote.SSH.serverInstallPath": {
-  "NYU-Greene": "/scratch/zz999/", // works
-  "Greene-Singularity": "/ext3/" // failed
+  "greene": "/scratch/zz999/", // works
+  "greene-singularity": "/ext3/" // failed
 }
 ```
 
