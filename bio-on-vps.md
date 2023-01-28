@@ -1,5 +1,7 @@
 # Bioinformatics on VPS
 
+[Oracle provides a free 4 OCPU and 24GB RAM VPS.](https://www.oracle.com/cloud/free/) Although It is an arm server, Python and R run perfectly.
+
 There are two ways to do it:
 
 1. Use SSH to code (VSCode, PyCharm)
@@ -33,7 +35,7 @@ connect to the instance with private key
 
 [FileZilla](https://filezilla-project.org/)
 
-Mount your site (on Windows)
+Mount your site as a drive (on Windows)
 
 [Installation](https://github.com/winfsp/sshfs-win)
 

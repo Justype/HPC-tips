@@ -1,0 +1,38 @@
+Bootstrap: docker
+From: ubuntu:22.04
+
+%labels
+  ubuntu:22.04
+
+%help
+  ubuntu:22.04 with neovim
+
+%environment
+  export LC_ALL=C.UTF-8
+  export LANG=C.UTF-8
+  export TZ="America/New_York"
+
+%runscript
+  exec /bin/bash "$@"
+
+%post
+    apt-get -y update
+    #apt-get -y upgrade
+
+    export DEBIAN_FRONTEND=noninteractive
+
+    # to change time zone to EST
+    export TZ="America/New_York"
+    apt-get install tzdata
+    rm -rf /etc/localtime
+    cp -rp /usr/share/zoneinfo/EST /etc/localtime
+
+    apt-get -y install build-essential git wget curl libicu-dev
+    # install newest neovim
+    wget https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.deb
+    dpkg -i nvim-linux64.deb
+    rm nvim-linux64.deb
+
+    #install nodejs LTS
+    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - &&\
+    apt-get install -y nodejs

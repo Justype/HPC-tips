@@ -58,26 +58,38 @@ ssh -i ~/.ssh/greene zz999@greene.hpc.nyu.edu # login to the server
 
 Here I copied the key directly, but I should append it. [Append public key - StackOverflow](https://stackoverflow.com/questions/23591083/how-to-append-authorized-keys-on-the-remote-server-with-id-rsa-pub-key)
 
-```
+Or you can copy all the text in public key, and add it to `authorized_keys`
+
+```bash
 ssh user@server "echo \"`cat ~/.ssh/id_rsa.pub`\" >> .ssh/authorized_keys"
 ```
 
 It does not work on powershell. You can also copy to the server and append it. The server may have `id_rsa.pub`. Backup in advance, or use a different name.
 
-```
-scp ~/.ssh/greene.pub user@server:.ssh/ # copy the key to the server
-ssh user@server # login server
+```bash
+cd ~
+scp .ssh/greene.pub zz999@greene.hpc.nyu.edu:.ssh/ # copy the key to the server
+ssh zz999@greene.hpc.nyu.edu # login server
 ```
 
 on server
 
+```bash
+cat ~/.ssh/greene.pub >> ~/.ssh/authorized_keys # append the public key to the authorized_keys
+rm ~/.ssh/greene.pub  # delete the public key
 ```
-cat ~/.ssh/greene.pub >> ~/.ssh/authorized_keys # append the public key to the 
-```
+
+### Permission on SSH key
+
+**DO NOT** share your private keys with anyone
+  - `chmod 600 ~/.ssh/id_rsa`
+  - `chmod 644 ~/.ssh/id_rsa.pub` or `600` if you want
+  - `chmod 700 ~/.ssh`
 
 ## Config File
 
-default path is `~/.ssh/config`, more parameters on [ssh.com](https://www.ssh.com/academy/ssh/config)
+- default path is `~/.ssh/config`, more parameters on [ssh.com](https://www.ssh.com/academy/ssh/config)
+- can be used for `ssh` and `scp`
 
 ```
 # Login with private key, no password required
@@ -96,16 +108,20 @@ Host greene-gw
   ForwardAgent yes
 ```
 
-So you can easily login with
+So you can easily login and transfer file with
 
 ```bash
 ssh greene
+
+scp ~/files greene:/destination
 ```
 
 instead of
 
 ```bash
 ssh -i ~/.ssh/greene <your netID>@greene.hpc.nyu.edu
+
+scp -i ~/.ssh/greene ~/files <your netID>@greene.hpc.nyu.edu:/destination
 ```
 
 # Shortcut On Windows Terminal
@@ -172,13 +188,21 @@ The solution:
 4. Remove duplicate keys
 5. Add `log#` in front of the keys (Just make sure the hostname is DIFFERENT. Whether it corresponds or not is not important)
 
-e.g.
+For NYU greene, just copy this to your `~/.ssh/known_hosts` (working well on 1/23/2023)
 
 ```
-greene.hpc.nyu.edu ssh-rsa AAAAB3Nza.....
-greene.hpc.nyu.edu ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNo.....
+; NYU Greene
+greene.hpc.nyu.edu ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDPXeQKa1foaijDEZx4qF0+DPgt6Zj3M2bqxsU0SYtvFL0pGhq1ZHW4b88l5nI2zLAw0H+CaU3j8WDq04uZZQW8lzRLUeQwNsT5baqDwcdIdG2RtRxjTHpttkB9JODZ4p3pPVhuEfZKiSdlzjnhpd1lpTFw5i/GrBswRqM1TcgaZnWP+iAeltaRX1jcbEQwfhlCe/nTRbVemR6P1MR6Tl//gi6m64Y3vgrsc5aaPQh7Nb68Ahv+GXUlB6cTvTNp/loZ3lB8NHotPzzipaHtZX9X2x0ZsSYAu3YUNXPxFJmpmYpsUwBtik/oYVzDBrDWMelYGZymCMvkUluuoiXqgiTLhz/4yz7y32W+nWaxDUJ/TH1ng2OfA6asnYzfk8s5UYrQ83VE02yAxGe1XuuN2y4tQInXtu1fGKkSN+VKhwFzVAzEzJTMKDthzJ7oHFdQ1lxc7qgLvThFzg7pkAgeZdvu/tiGsdbcUIqYsEzf/5ePyTx2sjpVRCd1CVC+KaFTj4s=
+greene.hpc.nyu.edu ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBDTHjuZNZhwswGP5BghtaS3VV/gI0BRvH9fDuWViIJD2VTiwo4CqARI5r6kNmEnYX0jD6XO0ta6csJR8OBKkq3Q=
 
-log1.greene.hpc.nyu.edu ssh-ed25519 AAA
-log2.greene.hpc.nyu.edu ssh-ed25519 BBB
-log3.greene.hpc.nyu.edu ssh-ed25519 CCC
+log1.greene.hpc.nyu.edu ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJVsHesY6wT8mgxyJ3B6e7OD/8v92Mc3p76EnNtX0SsU
+log2.greene.hpc.nyu.edu ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOO1r0g8AZ9CKvBpfmZDrIvU6vr4shg60UCG90dCRD0y
+log3.greene.hpc.nyu.edu ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBeEkL/sU86PJHQnqCb7tLjfzqBo0eqT2L6bGVs8givZ
 ```
+
+# OpenSSH on Windows
+
+- `ssh` works almost fine
+  - some parameters do not work properly
+- `scp` cannot recognize `~`
+  - `~/.ssh/greene.pub: No such file or directory`

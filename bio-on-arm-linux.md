@@ -22,7 +22,8 @@ Because I own an arm Surface and an arm VPS, I spent a lot of time on running Py
 
 ```bash
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh
-bash Miniconda3-latest-Linux-aarch64.sh
+bash Miniconda3-latest-Linux-aarch64.sh -b
+# bash Miniconda3-latest-Linux-aarch64.sh -b -p /path
 ```
 
 ```bash
@@ -118,7 +119,7 @@ sudo apt install -y ncbi-blast+
 
 ## tcltk
 
-NOTE: tcl/tk is based on x11 and cannot run on headless computer.
+NOTE: tcl/tk is based on x11 and CANNOT run on headless computer.
 
 See [here](https://community.rstudio.com/t/problem-installing-gwidgets2tcltk/137978)
 
