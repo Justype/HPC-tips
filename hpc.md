@@ -2,7 +2,7 @@
 
 High Performance Computer (HPC)
 
-Basic Architecture
+## Basic Architecture
 
 - login node
 - compute node

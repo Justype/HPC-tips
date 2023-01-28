@@ -9,7 +9,9 @@
 SSH: Secure Shell
 
 - connect to a remote machine, and run commands
-- [OpenSSH](https://www.openssh.com/) is widely used.
+- [OpenSSH](https://www.openssh.com/)
+  - built-in on Linux and Mac OS
+  - [OpenSSH - Microsoft Learn](https://learn.microsoft.com/en-us/windows/terminal/tutorials/ssh) maybe pre-installed on Windows.
 
 ```bash
 ssh username@server
@@ -34,8 +36,8 @@ You can use `ssh -i <path to the private key> user@host` to login without passwo
   - `-N`: "New" Provides a new passphrase for the key.
   - more parameters on [ssh.com](https://www.ssh.com/academy/ssh/keygen)
 2. append public key to the host `~/.ssh/authorized_keys`
-  - If you do not have it, just copy the server
-  - [Append public key (StackOverflow)](https://stackoverflow.com/questions/23591083/how-to-append-authorized-keys-on-the-remote-server-with-id-rsa-pub-key)
+  - If you do not have one, just copy the server
+  - [Append public key - StackOverflow](https://stackoverflow.com/questions/23591083/how-to-append-authorized-keys-on-the-remote-server-with-id-rsa-pub-key)
 3. login with the key
 
 ```bash
@@ -54,6 +56,24 @@ scp .ssh/greene.pub zz999@greene.hpc.nyu.edu:.ssh/authorized_keys # copy the pub
 ssh -i ~/.ssh/greene zz999@greene.hpc.nyu.edu # login to the server
 ```
 
+Here I copied the key directly, but I should append it. [Append public key - StackOverflow](https://stackoverflow.com/questions/23591083/how-to-append-authorized-keys-on-the-remote-server-with-id-rsa-pub-key)
+
+```
+ssh user@server "echo \"`cat ~/.ssh/id_rsa.pub`\" >> .ssh/authorized_keys"
+```
+
+It does not work on powershell. You can also copy to the server and append it. The server may have `id_rsa.pub`. Backup in advance, or use a different name.
+
+```
+scp ~/.ssh/greene.pub user@server:.ssh/ # copy the key to the server
+ssh user@server # login server
+```
+
+on server
+
+```
+cat ~/.ssh/greene.pub >> ~/.ssh/authorized_keys # append the public key to the 
+```
 
 ## Config File
 
@@ -87,6 +107,17 @@ instead of
 ```bash
 ssh -i ~/.ssh/greene <your netID>@gw.hpc.nyu.edu
 ```
+
+# Shortcut On Windows Terminal
+
+1. Add new profile
+2. Change the `name`
+3. Edit `command line` to `ssh xxx`
+4. [Change the Icon]
+5. Save
+6. login with one click
+
+![windows-terminal-shortcut](assets/windows-terminal-shortcut.jpg)
 
 # Troubleshooting
 

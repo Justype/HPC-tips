@@ -7,7 +7,7 @@ You can [import](https://github.com/new/import) this repository as your private 
 - [SSH](ssh.md) for connecting to server
   - [SSH without password (using key)](ssh.md#public-key-authentication)
   - [SSH config file](ssh.md#config-file)
-  - [identification error of several login nodes with same domain](ssh.md#different-servers-with-same-domain))
+  - [identification error of several login nodes with same domain](ssh.md#different-servers-with-same-domain)
 - [singularity](singularity.md)
 
 # Python and R
