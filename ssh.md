@@ -165,8 +165,6 @@ Every time you use ssh, it checks the server key with the key stored in `~/.ssh/
 
 If the key does not match, it will stop and warn you.
 
-This is how it stored in `~/.ssh/known_hosts`.
-
 ```
 ; hostname key_type key_content
 greene.hpc.nyu.edu ssh-rsa AAAAB3Nza.....
