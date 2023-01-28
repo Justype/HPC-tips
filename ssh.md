@@ -31,13 +31,13 @@ ssh zz999@greene.hpc.nyu.edu
 You can use `ssh -i <path to the private key> user@host` to login without password, more information on [ssh.com](https://www.ssh.com/academy/ssh/public-key-authentication)
 
 1. Use `ssh-keygen` to generate key pairs
-  - `-f`: key path
-  - `-q`: Silence ssh-keygen
-  - `-N`: "New" Provides a new passphrase for the key.
-  - more parameters on [ssh.com](https://www.ssh.com/academy/ssh/keygen)
+   - `-f`: key path
+   - `-q`: Silence ssh-keygen
+   - `-N`: "New" Provides a new passphrase for the key.
+   - more parameters on [ssh.com](https://www.ssh.com/academy/ssh/keygen)
 2. append public key to the host `~/.ssh/authorized_keys`
-  - If you do not have one, just copy the server
-  - [Append public key - StackOverflow](https://stackoverflow.com/questions/23591083/how-to-append-authorized-keys-on-the-remote-server-with-id-rsa-pub-key)
+   - If you do not have one, just copy the server
+   - [Append public key - StackOverflow](https://stackoverflow.com/questions/23591083/how-to-append-authorized-keys-on-the-remote-server-with-id-rsa-pub-key)
 3. login with the key
 
 ```bash
