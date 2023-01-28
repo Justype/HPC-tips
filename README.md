@@ -60,7 +60,7 @@ Install extensions on `$SCRATCH`
 
 ```json
 "remote.SSH.serverInstallPath": {
-  "greene": "/scratch/zz999/" // works
+  "greene": "/scratch/zz999/"
 }
 ```
 
@@ -84,7 +84,7 @@ cn () {
 - `cn` = `srun --pty /bin/bash`
 - `cn 4` = `srun --time=4:00:00 --pty /bin/bash`
 - `cn 2 4` = `srun --time=2:00:00 --mem=4G --pty /bin/bash`
-- `cn 1 16 4` = `srun --time=2:00:00 --mem=16G --cpus-per-task=4 --pty /bin/bash`
+- `cn 1 16 4` = `srun --time=1:00:00 --mem=16G --cpus-per-task=4 --pty /bin/bash`
 
 You can also save scripts in `~/.local/bin/` and add it to `PATH`
 
