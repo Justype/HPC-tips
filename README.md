@@ -56,7 +56,7 @@ Tips for arm VPS
 
 You can also use VS Code on HPC's compute node, see [VS Code - NYU HPC](https://sites.google.com/nyu.edu/nyu-hpc/training-support/general-hpc-topics/vs-code). But the python extension has about 10,000 files, while the home quota is 30,000. 
 
-Install extensions on `$SCRATCH`
+Install extensions in `$SCRATCH`
 
 ```json
 "remote.SSH.serverInstallPath": {
