@@ -112,4 +112,5 @@ $ echo "${FILE#*.}"
 tar.gz
 
 $ echo "${FILE##*.}"
+gz
 ```
