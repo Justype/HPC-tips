@@ -75,16 +75,16 @@ cn () {
     case $# in # if the number of arguments equals to 
         0) srun --pty /bin/bash;;
         1) srun --time=$1:00:00 --pty /bin/bash;;
-        2) srun --time=$1:00:00 --mem=$2G --pty /bin/bash;;
-        3) srun --time=$1:00:00 --mem=$2G --cpus-per-task=$3 --pty /bin/bash;;
+        2) srun --time=$1:00:00 --mem=$2GB --pty /bin/bash;;
+        3) srun --time=$1:00:00 --mem=$2GB --cpus-per-task=$3 --pty /bin/bash;;
     esac
 }
 ```
 
 - `cn` = `srun --pty /bin/bash`
 - `cn 4` = `srun --time=4:00:00 --pty /bin/bash`
-- `cn 2 4` = `srun --time=2:00:00 --mem=4G --pty /bin/bash`
-- `cn 1 16 4` = `srun --time=1:00:00 --mem=16G --cpus-per-task=4 --pty /bin/bash`
+- `cn 2 4` = `srun --time=2:00:00 --mem=4GB --pty /bin/bash`
+- `cn 1 16 4` = `srun --time=1:00:00 --mem=16GB --cpus-per-task=4 --pty /bin/bash`
 
 You can also save scripts in `~/.local/bin/` and add it to `PATH`
 
