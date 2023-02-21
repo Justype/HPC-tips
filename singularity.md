@@ -15,10 +15,38 @@
 - add colors
 - show present working directory with `PS1`
 
-```
+```bash
 force_color_prompt=yes
 export PS1="Singularity \[\e[0m\]\[\e[01;35m\]\w\[\e[0m\]\[\e[01;37m\] > "
 alias ls="ls --color=auto"
+```
+
+## Overlay
+
+you can add more storage while running.
+
+two types: external, embedded
+
+external
+
+```bash
+# create 1GB overlay to image
+singularity overlay create --size 1024 ext3_overlay.img
+
+# run singularity with overlay
+singularity shell --overlay ext3_overlay.img ubuntu.sif
+
+# create a directory
+mkdir /ext3
+```
+
+embedded (not recommanded)
+
+```bash
+singularity overlay create --size 1024 ubuntu.sif
+
+# use embedded overlay
+singularity shell --writable ubuntu.sif
 ```
 
 ## VS Code
