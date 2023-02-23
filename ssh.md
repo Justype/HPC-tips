@@ -218,6 +218,21 @@ Suppose we have logged in to login node 1 and saved the corresponding key. Then 
 
 The solution:
 
+edit `~/.ssh/config` to
+
+```
+Host greene
+  HostName greene.hpc.nyu.edu
+  # ... anything else
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+  # do not check key
+```
+
+and use `ssh greene` to login
+
+OR
+
 1. Comment out the key after connecting using semicolon `;`
 2. Reconnect to the server
 3. Repeat 1 and 2 until you get the keys for all the login nodes

@@ -10,6 +10,10 @@ You can [import](https://github.com/new/import) this repository as your private 
   - [identification error of several login nodes with same domain](ssh.md#different-servers-with-same-domain)
 - [singularity](singularity.md)
 
+[common issues](https://sites.google.com/nyu.edu/nyu-hpc/training-support/resolving-common-issues)
+
+1. `singularity exec --nv` to pass NVIDIA drivers to singularity containers
+
 # Quick Tips: alias
 
 You can modify your `~/.bashrc`, so you can run some commands easily.
@@ -62,39 +66,6 @@ Install extensions in `$SCRATCH`
 "remote.SSH.serverInstallPath": {
   "greene": "/scratch/zz999/"
 }
-```
-
-# Bash function
-
-A Bash function is essentially a set of commands that can be called numerous times.
-
-```bash
-# cn for compute-node
-# time memory CPU
-cn () {
-    case $# in # if the number of arguments equals to 
-        0) srun --pty /bin/bash;;
-        1) srun --time=$1:00:00 --pty /bin/bash;;
-        2) srun --time=$1:00:00 --mem=$2GB --pty /bin/bash;;
-        3) srun --time=$1:00:00 --mem=$2GB --cpus-per-task=$3 --pty /bin/bash;;
-    esac
-}
-```
-
-- `cn` = `srun --pty /bin/bash`
-- `cn 4` = `srun --time=4:00:00 --pty /bin/bash`
-- `cn 2 4` = `srun --time=2:00:00 --mem=4GB --pty /bin/bash`
-- `cn 1 16 4` = `srun --time=1:00:00 --mem=16GB --cpus-per-task=4 --pty /bin/bash`
-
-You can also save scripts in `~/.local/bin/` and add it to `PATH`
-
-```bash
-# User specific environment
-if ! [[ "$PATH" =~ "$HOME/.local/bin:" ]]
-then
-    PATH="$HOME/.local/bin:$PATH"
-fi
-export PATH
 ```
 
 # Use Bash to get filename or extension
