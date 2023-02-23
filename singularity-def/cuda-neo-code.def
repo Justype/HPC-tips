@@ -1,0 +1,51 @@
+Bootstrap: docker
+From: nvidia/cuda:12.0.1-devel-ubuntu22.04
+
+%labels
+  nvidia/cuda:12.0.1-devel-ubuntu22.04 neovim code-server
+
+%environment
+  export LC_ALL=C
+  export LANG=C.UTF-8
+  export TZ="America/New_York"
+  unset which
+
+%runscript
+  exec /bin/bash "$@"	
+
+%post
+    apt-get -y update
+    apt-get -y upgrade
+
+    export DEBIAN_FRONTEND=noninteractive
+    
+    # to change time zone to EST
+    export TZ="America/New_York"
+    apt-get install tzdata
+    rm -rf /etc/localtime
+    cp -rp /usr/share/zoneinfo/EST /etc/localtime
+
+    # common dependencies
+    apt-get -y install build-essential git wget curl nano
+    apt-get -y install python3-pip python3-venv python-is-python3
+    apt-get -y install libicu-dev
+    apt-get -y install gfortran flex bison
+    apt-get -y install ninja-build make cmake
+    apt-get -y install autoconf automake
+
+    # rclone sync tools
+    apt-get -y install rclone
+
+    # neovim
+    wget https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.deb
+    dpkg -i nvim-linux64.deb
+    rm nvim-linux64.deb
+
+    # nodejs LTS
+    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - &&\
+    apt-get -y install nodejs
+
+    # code-server
+    curl -fsSL https://code-server.dev/install.sh | sh
+
+    apt-get clean

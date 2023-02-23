@@ -2,10 +2,7 @@ Bootstrap: docker
 From: ubuntu:22.04
 
 %labels
-  ubuntu:22.04
-
-%help
-  ubuntu:22.04 with neovim
+  ubuntu:22.04 neovim code-server
 
 %environment
   export LC_ALL=C.UTF-8
@@ -17,7 +14,7 @@ From: ubuntu:22.04
 
 %post
     apt-get -y update
-    #apt-get -y upgrade
+    apt-get -y upgrade
 
     export DEBIAN_FRONTEND=noninteractive
 
@@ -27,12 +24,22 @@ From: ubuntu:22.04
     rm -rf /etc/localtime
     cp -rp /usr/share/zoneinfo/EST /etc/localtime
 
+    # common dependencies
     apt-get -y install build-essential git wget curl libicu-dev
-    # install newest neovim
+
+    # rclone sync tools
+    apt-get -y install rclone
+
+    # neovim
     wget https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.deb
     dpkg -i nvim-linux64.deb
     rm nvim-linux64.deb
 
-    #install nodejs LTS
+    # nodejs LTS
     curl -fsSL https://deb.nodesource.com/setup_18.x | bash - &&\
-    apt-get install -y nodejs
+    apt-get -y install nodejs
+
+    # code-server
+    curl -fsSL https://code-server.dev/install.sh | sh
+
+    apt-get clean
