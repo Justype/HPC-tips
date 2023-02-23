@@ -119,6 +119,48 @@ ssh -i ~/.ssh/greene <your netID>@greene.hpc.nyu.edu
 scp -i ~/.ssh/greene ~/files <your netID>@greene.hpc.nyu.edu:/destination
 ```
 
+# LocalForward
+
+With local forward, you can access remote port from local port.
+
+NOTE: If you want to use port forwarding, you SHOULD have correct [remote host identification](#remote-host-identification-has-changed).
+
+e.g. Because the jupyter version is quite old, you decide to use a newer one. You set up a conda environment and run jupyter. Now you can use local forward to access it.
+
+```bash
+ssh -L 8888:127.0.0.1:8888 zz999@greene.hpc.nyu.edu
+# default port of jupyter is 8888
+```
+
+or in ssh config
+
+```
+# login node
+Host greene
+  HostName greene.hpc.nyu.edu
+  User zz999
+  IdentityFile ~/.ssh/greene
+  #StrictHostKeyChecking no
+  # UserKnownHostsFile /dev/null
+  LocalForward 8888 localhost:8888
+  ForwardAgent yes
+
+# compute node
+Host greene-cn
+  HostName gr030
+  User zz999
+  IdentityFile ~/.ssh/greene
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+  ProxyJump greene
+  ForwardAgent yes
+  RequestTTY yes
+  LocalForward 8888 localhost:8888
+```
+
+![](assets/ssh-jupyter.png)
+
+
 # Shortcut On Windows Terminal
 
 1. Add new profile
@@ -157,7 +199,7 @@ possible reasons:
 1. man-in-the-middle attack
 2. server changed
 3. different servers with same domain
-   - appears on Windows and Mac OS, not on Linux
+   - appears on Windows, Mac OS, on Ubuntu 22.04 ...
 
 ### Different servers with same domain
 
@@ -182,7 +224,7 @@ The solution:
 4. Remove duplicate keys
 5. Add `log#` in front of the keys (Just make sure the hostname is DIFFERENT. Whether it corresponds or not is not important)
 
-For NYU greene, just copy this to your `~/.ssh/known_hosts` (working well on 1/23/2023)
+For NYU greene, just copy this to your `~/.ssh/known_hosts` (working well on 2/22/2023)
 
 ```
 ; NYU Greene

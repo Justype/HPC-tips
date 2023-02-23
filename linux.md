@@ -153,3 +153,73 @@ chmod u=rw,g=r,o= plan.txt # sets read and write permission for user, sets read 
   - `fg %<job number>`
 - see all jobs running on this computer `top`
 - stop `kill %<job number>`
+
+# Tar and zip
+
+## tar
+
+parameters:
+
+- `-c` : create 
+- `-x` : extract
+- `-f` : filename
+- `-u` : archives and adds to an existing archive file 
+- `-v` : verbose
+- `-A` : Concatenates the archive files 
+- `-z` : zip, tells tar command that creates tar file using gzip
+- `-r` : update or add file or directory in already existed .tar file 
+- `-t` : displays or lists files in archived file
+
+e.g.
+
+```bash
+$ tar cf md.tar *.md # create tar file
+
+$ tar ft md.tar # list all files in the tar
+README.md
+bio-on-arm-linux.md
+bio-on-vps.md
+hpc.md
+linux.md
+singularity.md
+ssh.md
+vim.md
+
+$ tar czf md.tar.gz *.md # create a tar file with gzip
+
+$ ls -lh *.tar # gzip is smaller
+-rw-r--r-- 1 zzz zzz 14K Feb 13 19:02 md.tar.gz
+-rw-r--r-- 1 zzz zzz 40K Feb 13 18:57 md.tar
+
+$ tar xfv md.tar.gz # extract
+README.md
+bio-on-arm-linux.md
+bio-on-vps.md
+hpc.md
+linux.md
+singularity.md
+ssh.md
+vim.md
+```
+
+## gzip, gunzip, and zip
+
+- g zip
+- g unzip
+
+```bash
+$ gzip cele.fastq # gzip file
+
+$ gunzip cele.fastq.gz # g unzip
+
+$ gunzip -c cele.fastq.gz > cele.fastq # keep original gzip file
+```
+
+- zip
+- unzip
+
+```bash
+$ zip temp.zip file1 folder2
+
+$ gunzip temp.zip
+```
