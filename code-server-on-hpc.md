@@ -4,11 +4,11 @@
 
 The process:
 
-1. [SSH config](#ssh): ssh-keygen, edit config file,local forwarding
+1. [SSH config](#ssh): ssh-keygen, edit config file, local forwarding
 2. [build container](#singularity-container): build your own singularity container
 3. [singularity overlay](#singularity-overlay): create a new overlay, and launch it with container
 4. [set system variable](#envsh)
-5. [optimize]() (optional)
+5. [optimize](#optimize) (optional)
 
 ## SSH
 
@@ -179,14 +179,30 @@ Host greene-cn
 
 Some app will automatically run `source .bashrc`, which can break the variable in singularity. So if there is `/ext3`, I will run another script.
 
-in `~/.bashrc`
+`~/.bashrc`
 
 ```bash
 # if /ext3 exits
 if [ -d /ext3 ]; then
     # run singularity env
-    source $HOME/template/env.sh
+    source /ext3/env.sh
 else
     # do normal .bashrc
 fi
 ```
+
+### Change some environment variables
+
+[XDG](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) (Cross-Desktop Group) is a set of variables that define the location of user specific directories. Most software follow these rules.
+
+in `/ext3/env.sh`
+
+```bash
+export XDG_CACHE_HOME=/ext3/.cache # you can change this to $SCRATCH/.cache 
+export XDG_DATA_HOME=/ext3/.local/share
+export XDG_STATE_HOME=/ext3/.local/state
+```
+
+So that the software data will be put into the overlay. Like the code-server extension will be installed in the overlay.
+
+Like this environment, you want to do some python. And in the other one, you want to do some front end. In this way you can easily split them out.

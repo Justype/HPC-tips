@@ -27,11 +27,16 @@ From: nvidia/cuda:12.0.1-devel-ubuntu22.04
 
     # common dependencies
     apt-get -y install build-essential git wget curl nano
-    apt-get -y install python3-pip python3-venv python-is-python3
-    apt-get -y install libicu-dev
-    apt-get -y install gfortran flex bison
-    apt-get -y install ninja-build make cmake
+    apt-get -y install zip
+    apt-get -y install libtool libtool-bin libicu-dev
+    apt-get -y install g++ gfortran flex bison pkg-config
+    apt-get -y install ninja-build make cmake doxygen
     apt-get -y install autoconf automake
+
+    # may want to use python virtual environment
+    apt-get -y install python3-pip python3-venv python-is-python3
+    # dependencies for pytorch
+    apt-get -y install libglib2.0-0 libsm6 libxrender1 libxext6
 
     # rclone sync tools
     apt-get -y install rclone

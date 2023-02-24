@@ -14,6 +14,11 @@ You can [import](https://github.com/new/import) this repository as your private 
 
 1. `singularity exec --nv` to pass NVIDIA drivers to singularity containers
 
+[Tools](useful-tools.md)
+
+- [Rclone](useful-tools.md#rclone---backup-files)
+- [OpenConnect](useful-tools.md#openconnect---vpn) AnyConnect on Linux
+
 # Quick Tips: alias
 
 You can modify your `~/.bashrc`, so you can run some commands easily.
@@ -42,20 +47,6 @@ Tips for arm VPS
 - [bio on arm linux](bio-on-arm-linux.md)
 - [bio on vps](bio-on-vps.md), if you want to use a VPS.
 
-# Shortcuts on Terminal
-
-| Shortcut   | Usage                         |
-| :--------- | :---------------------------- |
-| `↑`, `↓`   | previous and next command     |
-| `Tab`      | auto complete, twice for hint |
-| `Ctrl + c` | interrupt the application     |
-| `Ctrl + z` | suspend the application       |
-| `Ctrl + l` | clear                         |
-| `Ctrl + a` | move cursor to the start      |
-| `Ctrl + e` | move cursor to the dnd        |
-| `Ctrl + u` | erase before Cursor           |
-| `Ctrl + k` | erase after Cursor            |
-
 # VS Code on HPC
 
 You can also use VS Code on HPC's compute node, see [VS Code - NYU HPC](https://sites.google.com/nyu.edu/nyu-hpc/training-support/general-hpc-topics/vs-code). But the python extension has about 10,000 files, while the home quota is 30,000. 
@@ -67,6 +58,8 @@ Install extensions in `$SCRATCH`
   "greene": "/scratch/zz999/"
 }
 ```
+
+If you really want to put the VS Code and extension in singularity like me, you can see [this](code-server-on-hpc.md).
 
 # Use Bash to get filename or extension
 
