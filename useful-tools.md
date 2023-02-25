@@ -36,6 +36,7 @@ rc () {
         printf "Please run this at home directory\n"
         return
     fi
+    module load rclone/1.60.1
     case $1 in
         copy|c|1) rclone -v copy gnyu:greene/$2 ~/$2;;
         copyto|ct|2) rclone -v copyto gnyu:greene/$2 ~/$2;;
@@ -49,6 +50,7 @@ rcto () {
         printf "Please run this at home directory\n"
         return
     fi
+    module load rclone/1.60.1
     case $1 in
         copy|c|1) rclone -v copy ~/$2 gnyu:greene/$2;;
         copyto|ct|2) rclone -v copyto ~/$2 gnyu:greene/$2;;
