@@ -8,7 +8,8 @@ The process:
 2. [build container](#singularity-container): build your own singularity container
 3. [singularity overlay](#singularity-overlay): create a new overlay, and launch it with container
 4. [set system variable](#envsh)
-5. [optimize](#optimize) (optional)
+5. [remote forwarding on compute node](#remote-forwarding)
+6. [optimize](#optimize) (optional)
 
 ## SSH
 
@@ -38,36 +39,20 @@ Host greene
   UserKnownHostsFile /dev/null
   LocalForward 8080 localhost:8080
   ForwardAgent yes
-
-Host greene-cn
-  HostName cs398
-  # change this to the name of compute node after running sbatch
-  User <NetID>
-  IdentityFile ~/.ssh/greene
-  StrictHostKeyChecking no
-  UserKnownHostsFile /dev/null
-  ProxyJump greene
-  ForwardAgent yes
-  RequestTTY yes
-  LocalForward 8080 localhost:8080
 ```
 
 Explanation
 
 ```
-Host greene-cn
-  HostName cs398
-  # change this to the name of compute node after running sbatch
+Host greene
+  HostName greene.hpc.nyu.edu
   User <NetID>
   IdentityFile ~/.ssh/greene
   # use identification files, so there is no password needed
   StrictHostKeyChecking no
   UserKnownHostsFile /dev/null
   # these are to avoid identification error
-  ProxyJump greene
-  # go to compute node from login node
   ForwardAgent yes
-  RequestTTY yes
   LocalForward 8080 localhost:8080
   # code-server default port is 8080
 ```
@@ -128,36 +113,77 @@ and you can create a `env.sh` for the container, here is mine
 ```bash
 #!bin/bash
 
-# If miniconda not installed, install it.
-if ! [ -d "/ext3/miniconda3" ]; then
-    if ! [ -d "/ext3" ]; then
-        mkdir /ext3
-    fi
-    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-    bash Miniconda3-latest-Linux-x86_64.sh -b -p /ext3/miniconda3
-    rm Miniconda3-latest-Linux-x86_64.sh
-fi
-
-# Miniconda Env
-if ! [[ $PATH =~ "/ext3/miniconda3/bin" ]]
-then
-    source /ext3/miniconda3/etc/profile.d/conda.sh
-    export PATH=$PATH:/ext3/miniconda3/bin
-    export PYTHONPATH=$PYTHONPATH:/ext3/miniconda3/bin
-fi
-
-# # change XDG_PATH https://github.com/adrg/xdg
-# # common linux app will follow the rule of xdg
-# export XDG_CACHE_HOME=/ext3/.cache
-# export XDG_DATA_HOME=/ext3/.local/share
-# export XDG_STATE_HOME=/ext3/.local/state
+# change XDG_PATH (Cross-Desktop Group)
+# most app will follow the rules of xdg
+export XDG_CACHE_HOME=/ext3/.cache
+export XDG_DATA_HOME=/ext3/.local/share
+export XDG_STATE_HOME=/ext3/.local/state
 
 # turn on colors
 force_color_prompt=yes
 # beautify prompt
 export PS1="Singularity \[\033[01;34m\]\w\[\033[00m\] > "
 alias ls="ls --color=auto"
-alias vi=nvim
+alias vi=/bin/nvim
+alias code=/bin/code-server
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/ext3/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/ext3/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/ext3/miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="$PATH:/ext3/miniconda3/bin"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+```
+
+# Remote Forwarding
+
+Inspired by [Utku Evci](http://www.utkuevci.com/notes/port-forwarding/) and NYU HPC
+
+We use remote forwarding on compute node to login node. Therefore, we can access the the compute node.
+
+```
+             Local            Remote
+            Forward          Forward
+your computer ===> login node <=== compute node
+```
+
+on compute node
+
+```bash
+# If you login from log-1
+ssh -NfR 8080:localhost:8080 log-1
+# If you login from log-2
+ssh -NfR 8080:localhost:8080 log-2
+# ...
+```
+
+my script for remote forwarding
+
+```
+#!/bin/bash
+#
+# ports forwarding from compute node to login node
+# input the which login node 1, 2, 3
+
+# put all the ports you want to forward
+ports="8080 7860"
+
+if  [ -z $1 ]; then
+    echo "Please input the node 1, 2, 3"
+else
+    for port in $ports; do
+        echo "Remote Forwarding $port to log-$1"
+        /usr/bin/ssh -NfR $port:localhost:$port log-$1
+    done
+fi
 ```
 
 ## Optimize
