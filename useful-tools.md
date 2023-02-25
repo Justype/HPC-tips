@@ -32,7 +32,10 @@ Here is my script to make life easier.
 
 ```bash
 rc () {
-    module load rclone/1.60.1
+    if [ `pwd` != $HOME ]; then
+        printf "Please run this at home directory\n"
+        return
+    fi
     case $1 in
         copy|c|1) rclone -v copy gnyu:greene/$2 ~/$2;;
         copyto|ct|2) rclone -v copyto gnyu:greene/$2 ~/$2;;
@@ -42,10 +45,13 @@ rc () {
 }
 
 rcto () {
-    module load rclone/1.60.1
+    if [ `pwd` != $HOME ]; then
+        printf "Please run this at home directory\n"
+        return
+    fi
     case $1 in
-        copy|c|1) rclone -v copy $1 ~/$2 gnyu:greene/$2;;
-        copyto|ct|2) rclone -v copyto $1 ~/$2 gnyu:greene/$2;;
+        copy|c|1) rclone -v copy ~/$2 gnyu:greene/$2;;
+        copyto|ct|2) rclone -v copyto ~/$2 gnyu:greene/$2;;
         sync|s) rclone -vi sync ~/$2 gnyu:greene/$2;;
         *) printf "ONLY at home directory\ncopy(c) | sync(s) for folders\ncopyto(ct) for files\n";;
     esac
