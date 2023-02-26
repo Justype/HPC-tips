@@ -10,10 +10,6 @@ You can [import](https://github.com/new/import) this repository as your private 
   - [identification error of several login nodes with same domain](ssh.md#different-servers-with-same-domain)
 - [singularity](singularity.md)
 
-[common issues](https://sites.google.com/nyu.edu/nyu-hpc/training-support/resolving-common-issues)
-
-1. `singularity exec --nv` to pass NVIDIA drivers to singularity containers
-
 [Tools](useful-tools.md)
 
 - [Rclone](useful-tools.md#rclone---backup-files)
@@ -28,24 +24,11 @@ You can modify your `~/.bashrc`, so you can run some commands easily.
 ```bash
 alias ls="ls --color=auto"
 alias la="ls -A"
-alias ll="ls -l"
+alias ll="ls -lh"
 alias myjobs="squeue -u $USER"
 ```
 
 next time you type `ll`, it equals to `ls --color=auto -l`
-
-# Python and R
-
-Personally prefer:
-
-- [Miniconda](https://docs.conda.io/en/latest/miniconda.html) and [VSCode](https://code.visualstudio.com/) for [Python](https://www.python.org/)
-- [RStudio](https://www.rstudio.com/products/rstudio/) for [R](https://www.r-project.org/)
-- [code-server](https://github.com/coder/code-server) on VPS
-
-Tips for arm VPS
-
-- [bio on arm linux](bio-on-arm-linux.md)
-- [bio on vps](bio-on-vps.md), if you want to use a VPS.
 
 # VS Code on HPC
 

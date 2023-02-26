@@ -140,8 +140,8 @@ Host greene
   HostName greene.hpc.nyu.edu
   User zz999
   IdentityFile ~/.ssh/greene
-  #StrictHostKeyChecking no
-  # UserKnownHostsFile /dev/null
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
   LocalForward 8888 localhost:8888
   ForwardAgent yes
 

@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+# stage all changes, commit and push
+#
+# First parameter is the commit message
+
+if [ -z $1 ]; then
+    echo "Please input the commit comment."
+    exit
+fi
+
+git add -A
+git commit -m "$1"
+git push

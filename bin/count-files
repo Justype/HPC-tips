@@ -1,0 +1,25 @@
+#!/bin/bash
+#
+# Count the number of files in the current folder.
+#
+# parameters:
+# 1. number
+
+number=10
+
+if ! [ -z $1 ];then
+    number=$1
+else
+    printf "Use default setting. You can provide a number.\n"
+fi
+
+printf "Set number threshold to $number:\n\n"
+
+for item in `ls -A`
+do
+    count=`find $item | wc -l`
+    # if the count greater than threshold
+    if [ $count -gt $number ]; then
+        printf "%-15s %s\n" $item $count
+    fi
+done

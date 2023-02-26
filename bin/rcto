@@ -1,0 +1,21 @@
+#!/bin/bash
+#
+# Copy and Sync files from local to the remote
+#
+# %s/gnyu/xxx/g to replace all
+
+if [ `pwd` != $HOME ]; then
+    printf "Please run this at home directory\n"
+    exit
+fi
+
+# Load the rclone module
+module load rclone/1.60.1
+
+case $1 in
+    copy|c|1) rclone -v copy ~/$2 gnyu:greene/$2;;
+    copyto|ct|t|2) rclone -v copyto ~/$2 gnyu:greene/$2;;
+    sync|s) rclone -vi sync ~/$2 gnyu:greene/$2;;
+    *) printf "ONLY at home directory\ncopy(c) | sync(s) for folders\ncopyto(ct) for files\n";;
+esac
+

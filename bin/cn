@@ -1,0 +1,31 @@
+#!/bin/bash
+#
+# For get compute node on NYU HPC.
+#
+# 1. Hours (required)
+# 2. Memory GB (default 2)
+# 3. CPU threads (default 1)
+# 4. Number of GPU (default 0)
+
+case $# in # if the number of arguments equals to 
+    1)
+        echo "srun --time=$1:00:00 --pty /bin/bash"
+        srun --time=$1:00:00 --pty /bin/bash;;
+    2) 
+        echo "srun --time=$1:00:00 --mem=$2GB --pty /bin/bash"
+        srun --time=$1:00:00 --mem=$2GB --pty /bin/bash;;
+    3) 
+        echo "srun --time=$1:00:00 --mem=$2GB --cpus-per-task=$3 --pty /bin/bash"
+        srun --time=$1:00:00 --mem=$2GB --cpus-per-task=$3 --pty /bin/bash;;
+    4)
+        echo "srun --time=$1:00:00 --mem=$2GB --cpus-per-task=$3 --gres=gpu:$4 --pty /bin/bash"
+        srun --time=$1:00:00 --mem=$2GB --cpus-per-task=$3 --gres=gpu:$4 --pty /bin/bash;;
+    *)
+        echo "This script accepts 4 parameters:"
+        echo "1. Hours (required)"
+        echo "2. Memory GB (default 2)"
+        echo "3. CPU threads (default 1)"
+        echo "4. Number of GPU (default 0)"
+        ;;
+esac
+
