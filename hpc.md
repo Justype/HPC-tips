@@ -128,6 +128,13 @@ srun: job 14016003 has been allocated resources
 [zz999@gr001 ~]$
 ```
 
+### SRUN VS SBATCH
+
+- If you try to run something interactive, use `srun`.
+  - like `bash`, `jupyter lab`, `code-server`
+- If you want to run some script, use `sbatch`.
+  - `fastqc`, `trimmomatic`, ...
+
 ## Array Job Example
 
 ```bash
@@ -151,4 +158,4 @@ fastqc ${FILES[$SLURM_ARRAY_TASK_ID]}
 
 ## No Internet on WSL when VPN
 
-If you are using WSL 2 (Windows subsystem for Linux), you may not be able to access internet when Cisco AnyConnect VPN, installed from exe file, is activated. A potential solution: uninstall Cisco AnyConnect and install AnyConnect using Microsoft Store, and then setup new VPN connection using settings described on [IT webpage](https://nyu.service-now.com/sp?sys_kb_id=6177d7031c811904bbcf4dc2835ec340&id=kb_article_view&sysparm_rank=3&sysparm_tsqueryId=9a07fee81b146410a54ffdd51a4bcb8e).
+If you are using WSL 2 (Windows subsystem for Linux), you may not be able to access internet when Cisco AnyConnect VPN, installed from exe file, is activated. A potential solution: uninstall Cisco AnyConnect and install AnyConnect using **Microsoft Store**, and then setup new VPN connection using settings described on [IT webpage](https://nyu.service-now.com/sp?sys_kb_id=6177d7031c811904bbcf4dc2835ec340&id=kb_article_view&sysparm_rank=3&sysparm_tsqueryId=9a07fee81b146410a54ffdd51a4bcb8e).

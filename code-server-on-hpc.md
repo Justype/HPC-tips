@@ -165,26 +165,7 @@ ssh -NfR 8080:localhost:8080 log-2
 # ...
 ```
 
-my script for remote forwarding
-
-```
-#!/bin/bash
-#
-# ports forwarding from compute node to login node
-# input the which login node 1, 2, 3
-
-# put all the ports you want to forward
-ports="8080 7860"
-
-if  [ -z $1 ]; then
-    echo "Please input the node 1, 2, 3"
-else
-    for port in $ports; do
-        echo "Remote Forwarding $port to log-$1"
-        /usr/bin/ssh -NfR $port:localhost:$port log-$1
-    done
-fi
-```
+my script for remote forwarding: [remote-forward](bin/remote-forward)
 
 ## Optimize
 

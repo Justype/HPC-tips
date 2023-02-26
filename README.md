@@ -2,6 +2,8 @@
 
 You can [import](https://github.com/new/import) this repository as your private repository. Therefore, you can easily edit and copy commands.
 
+## Navigation
+
 - [basic linux](linux.md)
 - [basic HPC](hpc.md)
 - [SSH](ssh.md) for connecting to server
@@ -9,6 +11,12 @@ You can [import](https://github.com/new/import) this repository as your private 
   - [SSH config file](ssh.md#config-file)
   - [identification error of several login nodes with same domain](ssh.md#different-servers-with-same-domain)
 - [singularity](singularity.md)
+- [useful scripts](bin/README.md)
+
+[Common Issues](https://sites.google.com/nyu.edu/nyu-hpc/training-support/resolving-common-issues)
+
+- Singularity: use `:ro` when otherwise running containers
+- `--nv`: pass NVIDIA drivers to singularity containers
 
 [Tools](useful-tools.md)
 
@@ -28,11 +36,11 @@ alias ll="ls -lh"
 alias myjobs="squeue -u $USER"
 ```
 
-next time you type `ll`, it equals to `ls --color=auto -l`
+next time you type `ll`, it equals to `ls --color=auto -lh`
 
 # VS Code on HPC
 
-You can also use VS Code on HPC's compute node, see [VS Code - NYU HPC](https://sites.google.com/nyu.edu/nyu-hpc/training-support/general-hpc-topics/vs-code). But the python extension has about 10,000 files, while the home quota is 30,000. 
+You can also use VS Code on HPC's compute node, see [VS Code - NYU HPC](https://sites.google.com/nyu.edu/nyu-hpc/training-support/general-hpc-topics/vs-code). But the python extension has about 10,000 files, while the home quota is 30,000.
 
 Install extensions in `$SCRATCH`
 
