@@ -2,12 +2,11 @@
 
 to make HPC easier to use
 
-| script            | description                 |
-| :---------------- | :-------------------------- |
-| [`cn`](#cn)       | announce count node         |
-| [`rc`](#rcrcto)   | rclone from remote to local |
-| [`rcto`](#rcrcto) | rclone from local to remote |
-| [`gitup`](#gitup) | git stage all and push      |
+| script            | description                      |
+| :---------------- | :------------------------------- |
+| [`cn`](#cn)       | announce count node              |
+| [`rc`](#rc)       | copy or sync with same structure |
+| [`gitup`](#gitup) | git stage all and push           |
 
 others
 
@@ -35,34 +34,34 @@ parameters:
 - `cn 1 16 2` = `srun --time=1:00:00 --mem=16GB --cpus-per-task=2 --pty /bin/bash`
 - `cn 1 32 2 1` = `srun --time=1:00:00 --mem=32GB --cpus-per-task=2 --gres=gpu:1 --pty /bin/bash`
 
-## `rc/rcto`
+## `rc`
 
-NOTE: before you use, use must change the remote name and where you want to sync.
+RC is a shortcut for Rclone to copy or sync with same structure.
 
-default path is `gnyu:greene`, but you can change it to what you want.
+NOTE: before you use, set a remote path.
 
-```bash
-sed -i "s/gnyu:greene/remote:path/g" bin/rc bin/rcto
-# -i: in-place - modify the file 
-#       PLEASE first run without -i to view the result
-# s: substitute  g: global
-# replace all old by new
 ```
-
-1. option
-   1. `copy | c | 1`: copy folders, only update changed files
-   2. `copyto | ct | t | 2`: copy file
-   3. `sync | s`: sync (one way), may lose files
-2. path: where you want to sync
+SYNOPSIS
+    rc [direction] [options] path
+    rc set remote
+DIRECTION
+    from|f|1)  from remote to local (default)
+    to|t|2)    to remote from local
+OPTIONS
+    -s         sync "folder" (one way)
+    -y         yes, no ask
+NOTE
+    This tool aims to run at home directory and below.
+    Current Remote: gnyu:greene
+    If path does not exit at local, do not use absolute or dot path.
+```
 
 e.g.
 
 ```bash
-# copy containers from google drive to HPC
-rc c scratch/container/
-
-# backup a project
-rcto ct scratch/2023/project.tar.gz
+rc 2 -s .  # sync current directory to remote
+rc container/conda.ext3   # restore conda.ext3
+rc set google:backup/hpc  # set remote
 ```
 
 ## `gitup`

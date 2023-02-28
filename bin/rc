@@ -2,20 +2,190 @@
 #
 # Copy and Sync files from remote to the local
 #
-# %s/gnyu/xxx/g to replace all
+# Author: Justype
+# https://github.com/Justype/HPC-tips/tree/main/bin
+# 
+# You can change remote to where you want to sync.
 
-if [ `pwd` != $HOME ]; then
-    printf "Please run this at home directory\n"
+remote=gnyu:greene
+
+if [ $# == 0 ] || [[ $1 =~ ^(help|-h|--help)$ ]]; then
+    printf "RC is a shortcut for Rclone to copy or sync with same structure.\n\n"
+    printf "SYNOPSIS\n"
+    printf "    rc [direction] [options] path\n"
+    printf "    rc set remote\n"
+    printf "DIRECTION\n"
+    printf "    from|f|1)  from remote to local (default)\n"
+    printf "    to|t|2)    to remote from local\n"
+    printf "OPTIONS\n"
+    printf "    -s         sync \"folder\" (one way)\n"
+    printf "    -y         yes, no ask\n"
+    printf "NOTE\n"
+    printf "    This tool aims to run at home directory and below.\n"
+    printf "    Current Remote:\e[34m $remote\e[00m\n"
+    printf "    If path does not exit at local, do not use absolute or dot path.\n"
+    printf "EXAMPLES\n"
+    printf "    rc 2 -s .  # sync current directory to remote\n"
+    printf "    rc container/conda.ext3   # restore conda.ext3\n"
+    printf "    rc set google:backup/hpc  # set remote\n"
+    printf "\n"
+    exit
+elif [[ $1 =~ ^(version|--version)$ ]];then
+    printf "v1.6\n"
     exit
 fi
 
-# Load the module
-module load rclone/1.60.1
+set_remote () {
+    # parameters: 1. name 2. file
+    # Change Line 10 of this file
+    # On Mac this may have issue
+    sed -i "10s/.*/remote=$1/" $2
+    printf "set to\n"
+    sed "10!d" $2
+}
 
+# check if remote is blank
+if [ -z $remote ]; then
+    printf "Initialization required. Please provide the remote:path\n"
+    printf "e.g. google:backup/hpc\n"
+    read input
+    if [ -z $input ]; then
+        printf "Initialization failed. No remote path.\n"
+    else
+        set_remote $input $0
+    fi
+    exit
+fi
+
+# check first parameter is direction or not
 case $1 in
-    copy|c|1) rclone -v copy gnyu:greene/$2 ~/$2;;
-    copyto|ct|t|2) rclone -v copyto gnyu:greene/$2 ~/$2;;
-    sync|s) rclone -vi sync gnyu:greene/$2 ~/$2;;
-    *) printf "ONLY at home directory\ncopy(c) | sync(s) for folders\ncopyto(ct) for files\n";;
+    from|f|1)
+        direction=from
+        arg_list=${@:2}
+        ;;
+    to|t|2)
+        direction=to
+        arg_list=${@:2}
+        ;;
+    set)
+        if [ -z $2 ]; then
+            printf "Please provide a remote name.\n"
+        else
+            set_remote $2 $0
+        fi
+        exit
+        ;;
+    *)
+        printf "No direction provided. Remote to local by default.\n\n"
+        direction=from
+        arg_list=$@
+        ;;
 esac
+
+# loop through parameters
+for i in $arg_list; do
+    if [ $i == "-s" ]; then
+        option="sync -i"
+    elif [ $i == "-y" ]; then
+        decision=y
+    elif ! [[ $i =~ ^- ]]; then
+        path=$i
+    else
+        printf "Unknown argument accepted: $i\n"
+        exit
+    fi
+done
+
+if [ -z $path ]; then
+    printf "No path provided.\n"
+    exit
+fi
+# Try to auto-detect the type of path
+if [[ -z $option ]]; then
+    if [ -d $path ]; then
+        option="copy -v"
+    elif [ -f $path ]; then
+        option="copyto"
+    else
+        # If cannot and to remote
+        if [ $direction == "to" ]; then
+            printf "To remote: please provide an existing path.\n"
+            exit
+        # If cannot and from remote
+        elif [ $direction == "from" ]; then
+            printf "From remote: decide by / at the end. "
+            if [[ $path =~ /$ ]]; then
+                printf "YES => copy\n"
+                option="copy -v"
+            else
+                printf "NO  => copyto\n"
+                option="copyto"
+            fi
+        fi
+    fi
+fi
+
+## optimize for absolute path, current path, and parent path
+if [ -d $path ]; then
+    cd $path
+    local_path=`pwd`
+elif [ -f $path ]; then
+    # If it is a file, go to parent folder.
+    if [[ $path =~ "/" ]]; then
+        cd ${path%/*}
+        file_name=${path##*/}
+    fi
+    # If it is at this folder
+    file_name=$path
+    local_path=`pwd`/$file_name
+else
+    # path not exit
+    local_path=`pwd`/$path
+fi
+
+if ! [[ $local_path =~ ^$HOME ]]; then
+    printf "This tool aims to run at home directory and below.\n"
+    printf "$local_path does not fit.\n"
+    printf "You can create a symbolic link to this folder.\n"
+    printf "    ln -s $local_path ~/${local_path##*/}\n\n"
+    exit
+fi
+
+if ! [ -z $LMOD_CMD ]; then
+    # on HPC and load the module
+    module load rclone/1.60.1
+fi
+
+# remove first N characters, N = length of home path + 1
+#local_path=$current_path/$path
+path_length=`expr ${#HOME} + 1`
+remote_path=$remote/${local_path:$path_length}
+
+case $direction in
+    from) 
+        command="rclone $option $remote_path $local_path"
+        ;;
+    to)
+        command="rclone $option $local_path $remote_path"
+        ;;
+    *)
+        printf "Oops. Something went wrong.\n"
+        echo "direction   $direction"
+        echo "option      $option"
+        echo "local_path  $local_path"
+        echo "remote_path $remote_path"
+        exit
+        ;;
+esac
+
+printf "[Command] $command\n"
+if [ -z $decision ]; then
+    read -p "Are you sure do this? (y/n) " decision
+fi
+
+if [[ $decision == "y" ]]; then
+    $command
+else
+    exit
+fi
 
