@@ -7,7 +7,7 @@
 # 
 # You can change remote to where you want to sync.
 
-remote=gnyu:greene
+remote=
 
 if [ $# == 0 ] || [[ $1 =~ ^(help|-h|--help)$ ]]; then
     printf "RC is a shortcut for Rclone to copy or sync with same structure.\n\n"
