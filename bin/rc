@@ -9,7 +9,7 @@
 
 remote=
 
-if [ $# == 0 ] || [[ $1 =~ ^(help|-h|--help)$ ]]; then
+if [ $# == 0 ] || [[ $1 =~ ^(-h|--help)$ ]]; then
     printf "RC is a shortcut for Rclone to copy or sync with same structure.\n\n"
     printf "SYNOPSIS\n"
     printf "    rc [direction] [options] path\n"
@@ -30,8 +30,8 @@ if [ $# == 0 ] || [[ $1 =~ ^(help|-h|--help)$ ]]; then
     printf "    rc set google:backup/hpc  # set remote\n"
     printf "\n"
     exit
-elif [[ $1 =~ ^(version|--version)$ ]];then
-    printf "v1.6\n"
+elif [[ $1 =~ ^(-v|--version)$ ]];then
+    printf "v1.6.1\n"
     exit
 fi
 
@@ -113,7 +113,7 @@ if [[ -z $option ]]; then
             exit
         # If cannot and from remote
         elif [ $direction == "from" ]; then
-            printf "From remote: decide by / at the end. "
+            printf "From remote: file type is determined by / at the end. "
             if [[ $path =~ /$ ]]; then
                 printf "YES => copy\n"
                 option="copy -v"
@@ -188,4 +188,3 @@ if [[ $decision == "y" ]]; then
 else
     exit
 fi
-
