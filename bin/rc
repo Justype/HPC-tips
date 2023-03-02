@@ -31,7 +31,7 @@ if [ $# == 0 ] || [[ $1 =~ ^(-h|--help)$ ]]; then
     printf "\n"
     exit
 elif [[ $1 =~ ^(-v|--version)$ ]];then
-    printf "v1.6.2\n"
+    printf "v1.6.3\n"
     exit
 fi
 
@@ -43,19 +43,6 @@ set_remote () {
     printf "set to\n"
     sed "10!d" $2
 }
-
-# check if remote is blank
-if [ -z $remote ]; then
-    printf "Initialization required. Please provide the remote:path\n"
-    printf "e.g. google:backup/hpc\n"
-    read input
-    if [ -z $input ]; then
-        printf "Initialization failed. No remote path.\n"
-    else
-        set_remote $input $0
-    fi
-    exit
-fi
 
 # check first parameter is direction or not
 case $1 in
@@ -81,6 +68,19 @@ case $1 in
         arg_list=$@
         ;;
 esac
+
+# check if remote is blank
+if [ -z $remote ]; then
+    printf "Initialization required. Please provide the remote:path\n"
+    printf "e.g. google:backup/hpc\n"
+    read input
+    if [ -z $input ]; then
+        printf "Initialization failed. No remote path.\n"
+    else
+        set_remote $input $0
+    fi
+    exit
+fi
 
 # loop through parameters
 for i in $arg_list; do
@@ -131,11 +131,7 @@ if [ -d $path ]; then
     local_path=`pwd`
 elif [ -f $path ]; then
     if [[ $path =~ "/" ]]; then
-    # If it is a file, go to parent folder.
-    # If it is a file, go to parent folder.
-    if [[ $path =~ "/" ]]; then
         # If it is a file, go to parent folder.
-    if [[ $path =~ "/" ]]; then
         cd ${path%/*}
         file_name=${path##*/}
     else
