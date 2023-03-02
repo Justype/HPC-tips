@@ -31,7 +31,7 @@ if [ $# == 0 ] || [[ $1 =~ ^(-h|--help)$ ]]; then
     printf "\n"
     exit
 elif [[ $1 =~ ^(-v|--version)$ ]];then
-    printf "v1.6.1\n"
+    printf "v1.6.2\n"
     exit
 fi
 
@@ -105,7 +105,7 @@ if [[ -z $option ]]; then
     if [ -d $path ]; then
         option="copy -v"
     elif [ -f $path ]; then
-        option="copyto"
+        option="copyto -v"
     else
         # If cannot and to remote
         if [ $direction == "to" ]; then
@@ -113,13 +113,13 @@ if [[ -z $option ]]; then
             exit
         # If cannot and from remote
         elif [ $direction == "from" ]; then
-            printf "From remote: file type is determined by / at the end. "
+            printf "From remote: file type is determined by the / at the end. "
             if [[ $path =~ /$ ]]; then
                 printf "YES => copy\n"
                 option="copy -v"
             else
                 printf "NO  => copyto\n"
-                option="copyto"
+                option="copyto -v"
             fi
         fi
     fi
@@ -130,13 +130,18 @@ if [ -d $path ]; then
     cd $path
     local_path=`pwd`
 elif [ -f $path ]; then
+    if [[ $path =~ "/" ]]; then
     # If it is a file, go to parent folder.
+    # If it is a file, go to parent folder.
+    if [[ $path =~ "/" ]]; then
+        # If it is a file, go to parent folder.
     if [[ $path =~ "/" ]]; then
         cd ${path%/*}
         file_name=${path##*/}
+    else
+        # If it is at this folder
+        file_name=$path
     fi
-    # If it is at this folder
-    file_name=$path
     local_path=`pwd`/$file_name
 else
     # path not exit
