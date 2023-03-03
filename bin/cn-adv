@@ -1,0 +1,93 @@
+#!/bin/bash
+#
+# shortcuts of the srun
+#
+# setup samples
+
+if [ $# == 0 ] || [[ $1 =~ ^(-h|--help)$ ]]; then
+    printf "CN is tool used to request HPC resources.\n\n"
+    printf "SYNOPSIS\n"
+    printf "    rc script [parameters] [path]\n"
+    printf "SCRIPT\n"
+    printf "    bash|b)              bash\n"
+    printf "    code|c)              code-server (port 8080)\n"
+    printf "    jupyter-lab|l|j)     jupyter lab (port 8080)\n"
+    printf "    stable-diffusion|sd) stable diffusion webui (port 7860)\n"
+    printf "PARAMETERS:\n"
+    printf "    Times, Memory, CPU (in sequence)\n"
+    printf "PATH:\n"
+    printf "    Where you want to start.\n"
+    printf "EXAMPLES\n"
+    printf "    cn b        # start bash with default setting\n"
+    printf "    cn l 4 scratch/projtect  # start 4-hour lab at projtect\n"
+    printf "\n"
+fi
+
+# Start from second parameters
+for i in ${@:2}; do
+    # If it is a number
+    if [[ $i =~ ^[0-9]+$ ]]; then
+        if [ -z $hours ]; then
+            hours=$i
+        elif [ -z $mem ]; then
+            mem=$i
+        elif [ -z $cpu ]; then
+            cpu=$i
+        fi
+    else
+        # If it is not a number it is a path
+        path=$i
+    fi
+done
+
+# default values
+if [ -z $hours ]; then
+    hours=2
+fi
+if [ -z $mem ]; then
+    mem=2
+fi
+if [ -z $cpu ];then
+    cpu=1
+fi
+
+case $1 in
+    bash|b)
+        # print with color
+        printf "bash \e[31m${hours}\e[00mHours \e[31m${mem}\e[00mGB \e[31m${cpu}\e[00mCPU\n"
+        srun --time=$hours:00:00\
+            --mem=${mem}GB\
+            --cpus-per-task=$cpu\
+            --pty bash
+        ;;
+    code|c)
+        printf "code-server \e[31m${hours}\e[00mHours \e[31m${mem}\e[00mGB \e[31m${cpu}\e[00mCPU at \e[34m$path\e[00m\n"
+        srun --time=$hours:00:00\
+            --mem=${mem}GB\
+            --cpus-per-task=$cpu\
+            --pty singularity exec\
+                --env PS1="Singularity \[\033[01;34m\]\w\[\033[00m\] > "\
+                --overlay $SCRATCH/container/zc.ext3\
+                $HOME/template/cuda-neo-code.sif\
+                $HOME/script/code-server.sh $path
+        ;;
+    jupyter-lab|l|j)
+        printf "jupyter-lab \e[31m${hours}\e[00mHours \e[31m${mem}\e[00mGB \e[31m${cpu}\e[00mCPU at \e[34m$path\e[00m\n"
+        srun --time=$hours:00:00\
+            --mem=${mem}GB\
+            --cpus-per-task=$cpu\
+            --pty $HOME/cn-adv-script/conda-lab.sh $path
+        ;;
+    stable-diffusion|sd)
+        printf "stable-diffusion \e[31m1\e[00mHours \e[31m24\e[00mGB \e[31m2\e[00mCPU \e[31m1\e[00mGPU\n"
+        srun --time=1:00:00\
+            --mem=24GB\
+            --cpus-per-task=2\
+            --gres=gpu:1\
+            --pty singularity exec --nv\
+                --env PS1="Singularity \[\033[01;34m\]\w\[\033[00m\] > "\
+                --overlay $SCRATCH/container/sd.img\
+                $HOME/template/cuda-neo-code.sif\
+                $HOME/script/stable-diffusion.sh
+        ;;
+esac

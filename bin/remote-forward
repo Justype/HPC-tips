@@ -2,14 +2,17 @@
 #
 # ports forwarding from compute node to login node
 #
-# input the which login node
-#
-# 1, 2, 3
-
+# parameter: the which login node you want to forward
 nodes="1 2 3"
 
 # put all the ports you want to forward
 ports="8080 7860"
+
+# If at login node, exit
+if [[ `hostname` =~ "log" ]]; then
+    echo "At login node, Remote Forwarding Exit!"
+    exit
+fi
 
 forward() {
     # first argument is node
@@ -19,7 +22,7 @@ forward() {
 }
 
 if  [ -z $1 ]; then
-    printf "Do not specify the login node, port to all node\n\n"
+    printf "Do not specify the login node, port to all node\n"
     for node in $nodes; do
         for port in $ports; do
             forward $node $port
