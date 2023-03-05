@@ -27,7 +27,7 @@ From: nvidia/cuda:12.0.1-devel-ubuntu22.04
 
     # common dependencies
     apt-get -y install build-essential git wget curl nano
-    apt-get -y install zip
+    apt-get -y install zip tree
     apt-get -y install libtool libtool-bin libicu-dev
     apt-get -y install g++ gfortran flex bison pkg-config
     apt-get -y install libx11-dev libxkbfile-dev libsecret-1-dev
