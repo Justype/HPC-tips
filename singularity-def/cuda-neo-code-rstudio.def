@@ -1,0 +1,67 @@
+Bootstrap: docker
+From: nvidia/cuda:12.0.1-devel-ubuntu22.04
+
+%labels
+  nvidia/cuda:12.0.1-devel-ubuntu22.04 neovim code-server rstudio-server
+
+%environment
+  export LC_ALL=C
+  export LANG=C.UTF-8
+  export TZ="America/New_York"
+  unset which
+
+%runscript
+  exec /bin/bash "$@"	
+
+%post
+    apt -y update
+    apt -y upgrade
+
+    export DEBIAN_FRONTEND=noninteractive
+    
+    # to change time zone to EST
+    export TZ="America/New_York"
+    apt install tzdata
+    rm -rf /etc/localtime
+    cp -rp /usr/share/zoneinfo/EST /etc/localtime
+
+    # common dependencies
+    apt -y install build-essential git wget curl nano \
+                    zip tree \
+                    libtool libtool-bin libicu-dev \
+                    g++ gfortran flex bison pkg-config \
+                    libx11-dev libxkbfile-dev libsecret-1-dev \
+                    ninja-build make cmake doxygen \
+                    autoconf automake
+
+    # may want to use python virtual environment
+    apt -y install python3-pip python3-venv python-is-python3
+    # dependencies for pytorch
+    apt -y install libglib2.0-0 libsm6 libxrender1 libxext6
+
+    # rstudio-server and dependencies
+    apt -y install lib32gcc-s1 lib32stdc++6 libc6-i386 libclang-14-dev \
+                   libclang-common-14-dev libclang-dev libclang1-14 \
+                   libgc1 libllvm14 libobjc-11-dev libobjc4 libpq5 \
+                   libssl-dev lsb-release psmisc sudo
+    wget https://download2.rstudio.org/server/jammy/amd64/rstudio-server-2022.12.0-353-amd64.deb
+    dpkg -i rstudio-server-2022.12.0-353-amd64.deb
+    rm rstudio-server-2022.12.0-353-amd64.deb
+    # I used conda to manage the environment, so R is not installed.
+
+    # rclone sync tools
+    apt -y install rclone
+
+    # neovim
+    wget https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.deb
+    dpkg -i nvim-linux64.deb
+    rm nvim-linux64.deb
+
+    # nodejs LTS
+    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - &&\
+        apt -y install nodejs
+
+    # code-server
+    curl -fsSL https://code-server.dev/install.sh | sh
+
+    apt clean
