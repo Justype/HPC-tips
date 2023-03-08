@@ -47,7 +47,7 @@ From: nvidia/cuda:12.0.1-devel-ubuntu22.04
     wget https://download2.rstudio.org/server/jammy/amd64/rstudio-server-2022.12.0-353-amd64.deb
     dpkg -i rstudio-server-2022.12.0-353-amd64.deb
     rm rstudio-server-2022.12.0-353-amd64.deb
-    # I used conda to manage the environment, so R is not installed.
+    # I used conda and renv to manage the environment, so R is not installed.
 
     # rclone sync tools
     apt -y install rclone

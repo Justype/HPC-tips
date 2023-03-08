@@ -119,7 +119,7 @@ export PUB_CACHE=/ext3/.pub-cache
 
 Remote forward the ports from compute node to login node
 
-see [local forward](../ssh.md#localforward) and [remote forward](../code-server-on-hpc.md#remote-forwarding) and [this answer](https://unix.stackexchange.com/questions/46235/how-does-reverse-ssh-tunneling-work/118650#118650)
+see [local forward](../ssh.md#localforward) and [remote forward](../ssh.md#remoteforward) and [this answer](https://unix.stackexchange.com/questions/46235/how-does-reverse-ssh-tunneling-work/118650#118650)
 
 You may want to change which port you want to forward
 
@@ -150,7 +150,7 @@ srun --time=$hours:00:00\
     --mem=${mem}GB\
     --cpus-per-task=$cpu\
     --pty singularity exec\
-        --env PS1="Singularity \[\033[01;34m\]\w\[\033[00m\] > "\
+        --env PS1="Singularity \w > "\
         --overlay $SCRATCH/container/zc.ext3\
         $HOME/template/cuda-neo-code.sif\
         $HOME/script/code-server.sh $path

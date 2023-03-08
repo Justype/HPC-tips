@@ -17,11 +17,18 @@ You can [import](https://github.com/new/import) this repository as your private 
 
 - Singularity: use `:ro` when otherwise running containers
 - `--nv`: pass NVIDIA drivers to singularity containers
+- do not use OpenOnDemand, use [local forward and remote forward](no-ood.md) !
 
 [Tools](useful-tools.md)
 
 - [Rclone](useful-tools.md#rclone---backup-files)
 - [OpenConnect](useful-tools.md#openconnect---vpn) AnyConnect on Linux
+
+## Introducing mamba
+
+Highly recommend [mamba](https://mamba.readthedocs.io/en/latest/) instead of [conda](https://docs.conda.io/en/latest/miniconda.html) to manage R and Python packages.
+
+It is quite handy in handling R packages (tidyverse, BiocManager, ...), whereas conda is prone to encounter conflicts that take forever to solve.
 
 # Quick Tips: alias
 
@@ -49,8 +56,6 @@ Install extensions in `$SCRATCH`
   "greene": "/scratch/zz999/"
 }
 ```
-
-If you really want to put the VS Code and extension in singularity like me, you can see [this](code-server-on-hpc.md).
 
 # Use Bash to get filename or extension
 
