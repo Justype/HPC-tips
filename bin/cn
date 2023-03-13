@@ -2,30 +2,55 @@
 #
 # For get compute node on NYU HPC.
 #
-# 1. Hours (required)
-# 2. Memory GB (default 2)
-# 3. CPU threads (default 1)
-# 4. Number of GPU (default 0)
+# cn [hours] [memory] [CPU] [GPU]
+# 
+# Example
+#   cn      # default
+#   cn 8    # 8 hours
+#   cn 8 16 # 8 hours 16GB memory
+#   ...
 
-case $# in # if the number of arguments equals to 
-    1)
-        echo "srun --time=$1:00:00 --pty /bin/bash"
-        srun --time=$1:00:00 --pty /bin/bash;;
-    2) 
-        echo "srun --time=$1:00:00 --mem=$2GB --pty /bin/bash"
-        srun --time=$1:00:00 --mem=$2GB --pty /bin/bash;;
-    3) 
-        echo "srun --time=$1:00:00 --mem=$2GB --cpus-per-task=$3 --pty /bin/bash"
-        srun --time=$1:00:00 --mem=$2GB --cpus-per-task=$3 --pty /bin/bash;;
-    4)
-        echo "srun --time=$1:00:00 --mem=$2GB --cpus-per-task=$3 --gres=gpu:$4 --pty /bin/bash"
-        srun --time=$1:00:00 --mem=$2GB --cpus-per-task=$3 --gres=gpu:$4 --pty /bin/bash;;
-    *)
-        echo "This script accepts 4 parameters:"
-        echo "1. Hours (required)"
-        echo "2. Memory GB (default 2)"
-        echo "3. CPU threads (default 1)"
-        echo "4. Number of GPU (default 0)"
-        ;;
-esac
+hours_default=2
+mem_default=4
+cpu_default=1
+gpu_default=0
 
+# read parameters
+for i in $@; do
+    if [[ $i =~ ^[0-9]+$ ]]; then
+        # If it is a number
+        if [ -z $hours ]; then
+            hours=$i
+        elif [ -z $mem ]; then
+            mem=$i
+        elif [ -z $cpu ]; then
+            cpu=$i
+        elif [ -z $gpu ]; then
+            gpu=$i
+        else
+            printf "Unkown parameters $i\n"
+            exit 1
+        fi
+    else
+        printf "Unkown parameters $i\n"
+        exit 1
+    fi
+done
+
+# default values
+hours=${hours:-$hours_default}
+mem=${mem:-$mem_default}
+cpu=${cpu:-$cpu_default}
+gpu=${gpu:-$gpu_default}
+
+if [[ $gpu != 0 ]]; then
+    gpu_option="--gres=gpu:$gpu"
+fi
+
+printf "bash \e[31m${hours}\e[00mHours \e[31m${mem}\e[00mGB \e[31m${cpu}\e[00mCPU \e[31m${gpu}\e[00mGPU\n"
+
+srun --time=$hours:00:00\
+    --mem=${mem}GB\
+    --cpus-per-task=$cpu\
+    $gpu_option \
+    --pty bash

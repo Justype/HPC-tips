@@ -17,7 +17,7 @@ printf "Set number threshold to $number:\n\n"
 
 for item in `ls -A`
 do
-    count=`find $item | wc -l`
+    count=`find $item -type f | wc -l`
     # if the count greater than threshold
     if [ $count -gt $number ]; then
         printf "%-15s %s\n" $item $count

@@ -27,16 +27,27 @@ For get compute node on NYU HPC.
 
 parameters:
 
-1. Hours (required)
-2. Memory GB (default 2)
+1. Hours (default 2)
+2. Memory GB (default 4)
 3. CPU threads (default 1)
 4. Number of GPU (default 0)
 
-- `cn` = `srun --pty /bin/bash`
-- `cn 4` = `srun --time=4:00:00 --pty /bin/bash`
-- `cn 2 4` = `srun --time=2:00:00 --mem=4GB --pty /bin/bash`
-- `cn 1 16 2` = `srun --time=1:00:00 --mem=16GB --cpus-per-task=2 --pty /bin/bash`
-- `cn 1 32 2 1` = `srun --time=1:00:00 --mem=32GB --cpus-per-task=2 --gres=gpu:1 --pty /bin/bash`
+e.g.
+
+```bash
+# cn [hours] [memory] [CPU] [GPU]
+cn      # default
+cn 8    # for 8 hours
+```
+
+You can change default setting to what you prefer.
+
+```bash
+hours_default=2
+mem_default=4
+cpu_default=1
+gpu_default=0
+```
 
 ## `rc`
 
@@ -135,33 +146,4 @@ Remote Forwarding 8080 to log-2
 Remote Forwarding 7860 to log-2
 Remote Forwarding 8080 to log-3
 Remote Forwarding 7860 to log-3
-```
-
-# Advanced
-
-## `rc-adv`
-
-change xx) to what you want.
-
-Here I use srun, because `sbatch` is for background jobs, while `srun` is for interactive stuff.
-
-```bash
-srun --time=$hours:00:00\
-    --mem=${mem}GB\
-    --cpus-per-task=$cpu\
-    --pty singularity exec\
-        --env PS1="Singularity \w > "\
-        --overlay $SCRATCH/container/zc.ext3\
-        $HOME/template/cuda-neo-code.sif\
-        $HOME/script/code-server.sh $path
-
-# here I use srun to run singularity
-# and singularity run my code-server.sh script
-
-# --env means set environment
-# PS1 is for shell prompt, so it changed 
-    # from Singularity > 
-    # to   Singularity ~ >
-    # \w means show current path
-    # \[\033[01;34m\] means change to blue color
 ```
