@@ -20,6 +20,7 @@ if [ $# == 0 ] || [[ $1 =~ ^(-h|--help)$ ]]; then
     printf "OPTIONS\n"
     printf "    -s         sync \"folder\" (one way)\n"
     printf "    -y         yes, no ask\n"
+    printf "    -a         all files (include hidden)\n"
     printf "NOTE\n"
     printf "    This tool aims to run at home directory and below.\n"
     printf "    Current Remote:\e[34m $remote\e[00m\n"
@@ -31,7 +32,7 @@ if [ $# == 0 ] || [[ $1 =~ ^(-h|--help)$ ]]; then
     printf "\n"
     exit
 elif [[ $1 =~ ^(-v|--version)$ ]];then
-    printf "v1.6.3\n"
+    printf "v1.7.0\n"
     exit
 fi
 
@@ -40,20 +41,14 @@ set_remote () {
     # Change Line 10 of this file
     # On Mac this may have issue
     sed -i "10s/.*/remote=$1/" $2
-    printf "set to\n"
+    printf "set remote to\n"
     sed "10!d" $2
 }
 
 # check first parameter is direction or not
 case $1 in
-    from|f|1)
-        direction=from
-        arg_list=${@:2}
-        ;;
-    to|t|2)
-        direction=to
-        arg_list=${@:2}
-        ;;
+    from|f|1)   direction=from;     shift;;
+    to|t|2)     direction=to;       shift;;
     set)
         if [ -z $2 ]; then
             printf "Please provide a remote name.\n"
@@ -63,9 +58,8 @@ case $1 in
         exit
         ;;
     *)
-        printf "No direction provided. Remote to local by default.\n\n"
+        printf "No direction provided. Remote to local by default.\n"
         direction=from
-        arg_list=$@
         ;;
 esac
 
@@ -82,18 +76,34 @@ if [ -z $remote ]; then
     exit
 fi
 
-# loop through parameters
-for i in $arg_list; do
-    if [ $i == "-s" ]; then
-        option="sync -i"
-    elif [ $i == "-y" ]; then
-        decision=y
-    elif ! [[ $i =~ ^- ]]; then
-        path=$i
+# if path is before options
+if ! [[ $1 =~ ^- ]]; then
+    path=$1
+    shift
+fi
+
+# read options
+while getopts ":sya" arg
+do
+    case $arg in
+        s) option="sync -i";;
+        y) decision=y;;
+        a) option_all=y;;
+    esac
+done
+
+# skip read options
+shift $(expr $OPTIND - 1 )
+
+# read remaining options
+while test $# -gt 0; do
+    if ! [[ $1 =~ ^- ]] && [[ -z $path ]]; then
+        path=$1
     else
-        printf "Unknown argument accepted: $i\n"
-        exit
+        printf "Unknown argument accepted: $1\n"
+        exit 1
     fi
+    shift
 done
 
 if [ -z $path ]; then
@@ -109,11 +119,11 @@ if [[ -z $option ]]; then
     else
         # If cannot and to remote
         if [ $direction == "to" ]; then
-            printf "To remote: please provide an existing path.\n"
+            printf "Please provide an existing path.\n"
             exit
         # If cannot and from remote
         elif [ $direction == "from" ]; then
-            printf "From remote: file type is determined by the / at the end. "
+            printf "File not found: file type is determined by the / at the end. "
             if [[ $path =~ /$ ]]; then
                 printf "YES => copy\n"
                 option="copy -v"
@@ -141,7 +151,12 @@ elif [ -f $path ]; then
     local_path=`pwd`/$file_name
 else
     # path not exit
-    local_path=`pwd`/$path
+    if [[ `pwd` != $HOME ]]; then
+        printf "\nThis path does not exist locally. Please run this at home directory.\n"
+        exit 1
+    else
+        local_path=`pwd`/$path
+    fi
 fi
 
 if ! [[ $local_path =~ ^$HOME ]]; then
@@ -149,7 +164,7 @@ if ! [[ $local_path =~ ^$HOME ]]; then
     printf "$local_path does not fit.\n"
     printf "You can create a symbolic link to this folder.\n"
     printf "    ln -s $local_path ~/${local_path##*/}\n\n"
-    exit
+    exit 1
 fi
 
 if ! [ -z $LMOD_CMD ]; then
@@ -162,26 +177,28 @@ fi
 path_length=`expr ${#HOME} + 1`
 remote_path=$remote/${local_path:$path_length}
 
+# other options
+if [[ $option_all != "y" ]] && [[ $option != "copyto -v" ]]; then
+    other_option="--exclude=.**"
+fi
+
+# optimize for sync -y
+if [[ $option == "sync -i" ]] && [[ $decision == "y" ]]; then
+    option="sync -v"
+fi
+
 case $direction in
     from) 
-        command="rclone $option $remote_path $local_path"
+        command="rclone $option $other_option $remote_path $local_path"
         ;;
     to)
-        command="rclone $option $local_path $remote_path"
-        ;;
-    *)
-        printf "Oops. Something went wrong.\n"
-        echo "direction   $direction"
-        echo "option      $option"
-        echo "local_path  $local_path"
-        echo "remote_path $remote_path"
-        exit
+        command="rclone $option $other_option $local_path $remote_path"
         ;;
 esac
 
 printf "[Command] $command\n"
 if [ -z $decision ]; then
-    read -p "Are you sure do this? (y/n) " decision
+    read -p "Are you sure do this? [y/N] " decision
 fi
 
 if [[ $decision == "y" ]]; then
