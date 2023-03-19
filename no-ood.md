@@ -1,10 +1,12 @@
 # No OpenOnDemand
 
+After the maintenance, the OOD is much better now.
+
 It felt good the first time I used it. But after using it many times, the problems started to show up.
 
 1. Frequently log you out (pretty annoying)
-2. RStudio cannot view data (annoying too)
-3. RStudio is sometimes hard to start
+2. RStudio cannot view data (annoying too) (fixed)
+3. RStudio is sometimes hard to start  (fixed by refreshing)
 4. no nodejs => cannot install jupyter-lab plugins
 
 ![](assets/no-ood-rstudio.png)
