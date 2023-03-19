@@ -1,8 +1,8 @@
 Bootstrap: docker
-From: nvidia/cuda:12.0.1-devel-ubuntu22.04
+From: nvidia/cuda:12.1.0-devel-ubuntu22.04
 
 %labels
-  nvidia/cuda:12.0.1-devel-ubuntu22.04 neovim code-server rstudio-server
+  nvidia/cuda:12.1.0-devel-ubuntu22.04 neovim code-server rstudio-server
 
 %environment
   export LC_ALL=C
@@ -44,9 +44,9 @@ From: nvidia/cuda:12.0.1-devel-ubuntu22.04
                    libclang-common-14-dev libclang-dev libclang1-14 \
                    libgc1 libllvm14 libobjc-11-dev libobjc4 libpq5 \
                    libssl-dev lsb-release psmisc sudo
-    wget https://download2.rstudio.org/server/jammy/amd64/rstudio-server-2022.12.0-353-amd64.deb
-    dpkg -i rstudio-server-2022.12.0-353-amd64.deb
-    rm rstudio-server-2022.12.0-353-amd64.deb
+    wget https://download2.rstudio.org/server/jammy/amd64/rstudio-server-2023.03.0-386-amd64.deb
+    dpkg -i rstudio-server-2023.03.0-386-amd64.deb
+    rm rstudio-server-2023.03.0-386-amd64.deb
     # I used conda and renv to manage the environment, so R is not installed.
 
     # rclone sync tools
