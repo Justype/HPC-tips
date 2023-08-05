@@ -55,13 +55,15 @@ download source code, build it
 
 latest version on [cran](https://cran.r-project.org/)
 
+If you are using the conda environment, please deactivate it before running.
+
 ```bash
 [ -d ~/source ] || mkdir ~/source
 cd ~/source
-wget https://cran.r-project.org/src/base/R-4/R-4.2.2.tar.gz # change to the latest version
-tar -xf R-4.2.2.tar.gz
-rm R-4.2.2.tar.gz
-cd R-4.2.2
+wget https://cran.r-project.org/src/base/R-4/R-4.3.1.tar.gz # change to the latest version
+tar -xf R-4.3.1.tar.gz
+rm R-4.3.1.tar.gz
+cd R-4.3.1
 ./configure --enable-R-shlib --with-blas --with-lapack
 make
 ```
