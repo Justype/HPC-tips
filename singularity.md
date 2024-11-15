@@ -3,14 +3,19 @@
 [Singularity](https://sylabs.io/docs/) is an container platform.
 
 - [singularity with miniconda - NYU HPC](https://sites.google.com/nyu.edu/nyu-hpc/hpc-systems/greene/software/singularity-with-miniconda)
-- Because the HPC account has a limit, you can use singularity overlay to solve it.
-- Because you do not have the root permission on HPC, you cannot update the version of apps on HPC. You may want to build your own image with latest app like `nodejs`, `neovim`.
+- Because the HPC account has a quota for number of files, you can use singularity overlay to solve it.
+- Because you do not have the root permission on HPC, you cannot update the version of apps on HPC. You may want to build your own image with latest apps like `nodejs`, `neovim`.
 
-1. `.def`
+1. `.def` definition file like the docker file
 2. `.sif` a system image
-3. `.ext3` overlay file which can be mounted loaded into  
+3. `.ext3/.img` overlay file which can be mounted loaded into (now people use `.img`, no `.ext3` anymore)
+4. `.sqf/.squashfs` **read-only** file (like a prebuilt readonly overlay)
+   - (If you want to make some changes or add somethings to existing image, you can use it.)
+   - Like in Greene, we have `--overlay /scratch/work/public/singularity/r4.2.0-ubuntu22.04-20220614.sqf:ro`
+   - `.sqf` will be loaded on root (`/`).
+   - You can also build your `.sqf` like this: [build-r-squashfs.sh](singularity-def/build-r-squashfs.sh)
 
-## Beautify in singularity
+## Beautify Singularity Shell
 
 - add colors
 - show present working directory with `PS1`
@@ -31,7 +36,8 @@ external
 
 ```bash
 # create 1GB overlay to image
-singularity overlay create --size 1024 ext3_overlay.img
+# --sparse helps you save disk space
+singularity overlay create --size 1024 --sparse ext3_overlay.img
 
 # run singularity with overlay
 singularity shell --overlay ext3_overlay.img ubuntu.sif
@@ -89,37 +95,11 @@ The HPC singularity images are stored at `/scratch/work/public/singularity/`
 - I modified `/scratch/work/public/singularity/ubuntu-22.04.def`
 - You can run any command after `%post`
 
-```
-Bootstrap: docker
-From: ubuntu:22.04
-
-%labels
-  ubuntu:22.04
-
-%help
-  ubuntu:22.04
-
-%environment
-  # set environment and time zone, copied from 
-  export LC_ALL=C.UTF-8
-  export LANG=C.UTF-8
-  export TZ="America/New_York"
-
-%runscript
-  exec /bin/bash "$@"
-
-%post
-    apt-get -y update
-    #apt-get -y upgrade
-
-    ## install any apps you want
-    apt-get -y install build-essential git wget curl libicu-dev
-```
-
+For reference, please check my definition file: [cuda-nvim-code-rstudio.def](singularity-def/cuda-nvim-code-rstudio.def).
 
 ## neovim
 
-- HPC also use singularity to run neovim, but the version is `0.6.x`. Some plugins require `0.8.x`.
+- HPC also use singularity to run neovim, but the version is `0.6.x`. Some plugins require at least `0.8.x`.
 - I built a image using [neo-code.def](singularity-def/neo-code.def).
 - You can install neovim plugin in singularity overlay.
 

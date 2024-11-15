@@ -7,7 +7,7 @@
 # 
 # You can change remote to where you want to sync.
 
-remote=
+remote=remote_name:path
 
 if [ $# == 0 ] || [[ $1 =~ ^(-h|--help)$ ]]; then
     printf "RC is a shortcut for Rclone to copy or sync with same structure.\n\n"
@@ -167,10 +167,10 @@ if ! [[ $local_path =~ ^$HOME ]]; then
     exit 1
 fi
 
-if ! [ -z $LMOD_CMD ]; then
-    # on HPC and load the module
-    module load rclone/1.60.1
-fi
+# if ! [ -z $LMOD_CMD ]; then
+#     # on HPC and load the module
+#     module load rclone/1.60.1
+# fi
 
 # remove first N characters, N = length of home path + 1
 #local_path=$current_path/$path

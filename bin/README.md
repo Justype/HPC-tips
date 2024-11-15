@@ -2,11 +2,11 @@
 
 to make HPC easier to use
 
-| script            | description                      |
-| :---------------- | :------------------------------- |
-| [`cn`](#cn)       | announce count node              |
-| [`rc`](#rc)       | copy or sync with same structure |
-| [`gitup`](#gitup) | git stage all and push           |
+| script            | description                           |
+| :---------------- | :------------------------------------ |
+| [`cn`](#cn)       | request compute resource using `srun` |
+| [`rc`](#rc)       | copy or sync with same structure      |
+| [`gitup`](#gitup) | git stage all and push                |
 
 others
 
@@ -17,7 +17,7 @@ others
 
 advanced
 
-[`rc-adv`](#rc-adv): advanced srun 
+[`rc-adv`](../archive/cn-adv): advanced srun 
 
 # Manual
 

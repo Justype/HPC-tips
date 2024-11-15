@@ -94,7 +94,11 @@ drwxrwxr-x. 3 xxx xxx 4096 Jan 10 12:31 LinuxExercise
   - `x` : run the commands OR change into the directory if it is a directory
   - `-` : no this permission
 
-Because the data is binary in computer. So are these permissions.  
+Because the data is binary in computer. So are these permissions. 
+
+## Special Permissions
+
+- `g+s` s in group: 
 
 ## Change Permission
 
@@ -254,5 +258,5 @@ $ gunzip -c cele.fastq.gz > cele.fastq # keep original gzip file
 ```bash
 $ zip temp.zip file1 folder2
 
-$ gunzip temp.zip
+$ unzip temp.zip
 ```

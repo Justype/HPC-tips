@@ -4,14 +4,23 @@ Vim is a text editor.
 
 [Interactive tutorial](https://www.openvim.com/)
 
+## Enter Commands
+
+- `:` Then Enter Command
+- `:w` write the changes
+- `:q` quit the file
+- `:q!` quit and ignore changes
+- `:wq` write and quit
+
 ## Mode
 
 - Normal
 - Insert
+- Visual (View and Edit or Copy)
 
 ### Normal mode
 
-- Navigate
+- Navigation
   - `h` ← `j` ↓ `k` ↑ `l` →
   - `w`, `e`, `b` jump words
     - `w` start of next word
@@ -38,12 +47,19 @@ Vim is a text editor.
 
 ### Insert Mode
 
-- `i` Insert Mode
-- `a` move right, and Insert
-- `o` create a new line below, and go to Insert Mode
-- `O` create a new line above, and Insert
+- `i` Enter Insert Mode
+- `a` move right, and Enter Insert Mode
+- `o` create a new line below, and Enter Insert Mode
+- `O` create a new line above, and Enter Insert Mode
 
-### Combination
+### Visual Mode
+
+- `v` Enter View Mode
+- Same navigation keys as the normal mode
+- `y` yank (copy)
+
+
+## Key Combination Example
 
 - `3h`: press `h` 3 times, so three left
 - `9w`: press `w` 9 times
@@ -53,7 +69,25 @@ numbers and input mode
 - `10i-` `Esc`: ----------
 - `3igo` `Esc`: gogogo
 
-f
+finding
 
 - `3fq` find the third q
 
+copying (y + y or position)
+
+- `yy` copy current line
+- `y3e` copy 3 words
+- `y0` copy to the start of the line
+- `yG` copy to the end of the file
+
+Deleting (d + d or position)
+
+- `dd` delete current line
+- `d3e` delete 3 words
+- `d0` delete to the start of the line
+- `dG` delete to the end of the file
+
+## Substitute Characters
+
+`:%s/where to change/replacement/` (only the first one in each line)
+`:%s/where to change/replacement/g` (global: all)

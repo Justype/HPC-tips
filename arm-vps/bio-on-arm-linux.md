@@ -26,9 +26,12 @@ bash Miniconda3-latest-Linux-aarch64.sh -b
 # bash Miniconda3-latest-Linux-aarch64.sh -b -p /path
 ```
 
+Add [bioconda](https://bioconda.github.io/) channel
+
 ```bash
-conda update --all
-conda install notebook pandas matplotlib biopython
+conda config --add channels bioconda
+conda config --add channels conda-forge
+conda config --set channel_priority strict
 ```
 
 ## R
@@ -60,10 +63,10 @@ If you are using the conda environment, please deactivate it before running.
 ```bash
 [ -d ~/source ] || mkdir ~/source
 cd ~/source
-wget https://cran.r-project.org/src/base/R-4/R-4.3.1.tar.gz # change to the latest version
-tar -xf R-4.3.1.tar.gz
-rm R-4.3.1.tar.gz
-cd R-4.3.1
+wget https://cran.r-project.org/src/base/R-4/R-4.4.2.tar.gz # change to the latest version
+tar -xf R-4.4.2.tar.gz
+rm R-4.4.2.tar.gz
+cd R-4.4.2
 ./configure --enable-R-shlib --with-blas --with-lapack
 make
 ```
@@ -100,7 +103,7 @@ BiocManager::install("VariantAnnotation")
 if you want to uninstall R
 
 ```bash
-cd ~/source/R-4.2.2
+cd ~/source/R-4.4.2
 sudo make uninstall
 ```
 
@@ -115,6 +118,30 @@ sudo make uninstall
 
 ```bash
 sudo apt install -y ncbi-blast+
+```
+
+## sra-tools
+
+To build [ncbi/sra-tools](https://github.com/ncbi/sra-tools), you need to build [ncbi/ncbi-vdb](https://github.com/ncbi/ncbi-vdb) first.
+
+The output is under `$HOME/ncbi-outdir`
+
+```bash
+wget https://github.com/ncbi/ncbi-vdb/archive/refs/tags/3.1.1.tar.gz
+tar xf 3.1.1.tar.gz
+rm 3.1.1.tar.gz
+mv ncbi-vdb-3.1.1 ncbi-vdb # no version at the end, otherwise sra-tools cannot find it automatically
+cd ncbi-vdb
+./configure
+make
+cd ..
+
+wget https://github.com/ncbi/sra-tools/archive/refs/tags/3.1.1.tar.gz
+tar xf 3.1.1.tar.gz
+rm 3.1.1.tar.gz
+cd sra-tools-3.1.1
+./configure
+make
 ```
 
 # capabilities
@@ -169,3 +196,4 @@ options(bitmapType='cairo')
 3. https://stackoverflow.com/questions/17243648/cant-display-png
 4. https://github.com/rstudio/rstudio/issues/8809#issuecomment-1224856044
 5. https://www.mdnice.com/writing/2bcdcc0e4955450dbffcd9c73f7779ca
+6. https://github.com/ncbi/sra-tools/wiki/Building-and-Installing-from-Source

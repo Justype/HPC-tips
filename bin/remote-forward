@@ -10,7 +10,7 @@ ports="8080 7860"
 
 # If at login node, exit
 if [[ `hostname` =~ "log" ]]; then
-    echo "At login node, Remote Forwarding Exit!"
+    echo "At login node, Exit!"
     exit
 fi
 

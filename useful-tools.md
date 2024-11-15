@@ -4,14 +4,15 @@
 
 authgroup options
 
-- `NYU VPN: NYU-NET Traffic Only`
-- `NYU VPN: All Traffic`
+- `1 - NYU-NET Traffic Only`
+- `2 - All Traffic`
 
 ```bash
+# not working anymore, now anyconnect will open your browser for authentication
 sudo openconnect \
     --background \
     --protocol=anyconnect \
-    --authgroup="NYU VPN: NYU-NET Traffic Only" \
+    --authgroup="1 - NYU-NET Traffic Only" \
     --user="<NetID>" \
     --form-entry main:password="<password>" \
     --form-entry main:secondary_password="push" \

@@ -9,22 +9,21 @@ You can [import](https://github.com/new/import) this repository as your private 
 - [SSH](ssh.md) for connecting to server
   - [SSH without password (using key)](ssh.md#public-key-authentication)
   - [SSH config file](ssh.md#config-file)
-  - [identification error of several login nodes with same domain](ssh.md#different-servers-with-same-domain)
-- [singularity](singularity.md)
+- [singularity](singularity.md) container
 - [useful scripts](bin/README.md)
 
 [Common Issues](https://sites.google.com/nyu.edu/nyu-hpc/training-support/resolving-common-issues)
 
 - Singularity: use `:ro` when otherwise running containers
 - `--nv`: pass NVIDIA drivers to singularity containers
-- do not use OpenOnDemand, use [local forward and remote forward](no-ood.md) !
+- do not use OpenOnDemand, use [local forward and remote forward](no-ood.md)!
 
 [Tools](useful-tools.md)
 
 - [Rclone](useful-tools.md#rclone---backup-files)
-- [OpenConnect](useful-tools.md#openconnect---vpn) AnyConnect on Linux
+- [OpenConnect](useful-tools.md#openconnect---vpn) (Not working due to authentication change)
 
-## Introducing mamba
+## Introducing mamba (Now conda use libmamba, so it doesn't matter.)
 
 Highly recommend [mamba](https://mamba.readthedocs.io/en/latest/) instead of [conda](https://docs.conda.io/en/latest/miniconda.html) to manage R and Python packages.
 

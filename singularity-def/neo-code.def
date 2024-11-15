@@ -31,13 +31,14 @@ From: ubuntu:22.04
     apt-get -y install rclone
 
     # neovim
-    wget https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.deb
-    dpkg -i nvim-linux64.deb
-    rm nvim-linux64.deb
+    wget https://github.com/neovim/neovim/releases/download/v0.10.2/nvim-linux64.tar.gz
+    tar xf nvim-linux64.tar.gz
+    cp -r nvim-linux64/* /usr/local/
+    rm -r nvim-linux64*
 
     # nodejs LTS
-    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - &&\
-    apt-get -y install nodejs
+    curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - &&\
+        apt -y install nodejs
 
     # code-server
     curl -fsSL https://code-server.dev/install.sh | sh
