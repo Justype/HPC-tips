@@ -17,7 +17,7 @@ There are two similar environment-control softwares: [Environment Modules](https
 
 It is installed by default on Redhat. In Ubuntu, you need to install and init it.
 
-```
+```bash
 sudo apt update -y
 sudo apt install -y environment-modules
 
@@ -68,7 +68,7 @@ modules/
 
 ## Relative Path in Modulefile
 
-```bash
+```tcl
 # get absolute path of this module file, like /share/apps/modulefiles/
 set abs_path [file normalize [info script]]
 

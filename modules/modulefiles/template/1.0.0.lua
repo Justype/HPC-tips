@@ -33,6 +33,8 @@ end
 -- Modify environment variables if the directories exist
 if (isDir(pathJoin(app_root, "bin"))) then
     prepend_path("PATH", pathJoin(app_root, "bin"))
+else
+    LmodMessage("WARNING: No bin directory found in " .. app_root)
 end
 if (isDir(pathJoin(app_root, "lib"))) then
     prepend_path("LD_LIBRARY_PATH", pathJoin(app_root, "lib"))

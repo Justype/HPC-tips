@@ -41,6 +41,8 @@ if { [module-info mode] == "unload" } {
 # Modify environment variables if the folders exist
 if {[file isdirectory "$app_root/bin"]} {
     prepend-path PATH $app_root/bin
+} else {
+    puts stderr "WARNING: No bin directory found in $app_root"
 }
 if {[file isdirectory "$app_root/lib"]} {
     prepend-path LD_LIBRARY_PATH $app_root/lib
