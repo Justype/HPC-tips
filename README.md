@@ -11,6 +11,7 @@ You can [import](https://github.com/new/import) this repository as your private 
   - [SSH config file](ssh.md#config-file)
 - [singularity](singularity.md) container
 - [useful scripts](bin/README.md)
+- [set up personal environment modules or Lmod](modules/README.md)
 
 [Common Issues](https://sites.google.com/nyu.edu/nyu-hpc/training-support/resolving-common-issues)
 
