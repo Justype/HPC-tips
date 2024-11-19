@@ -21,20 +21,19 @@ help([[Placeholder for the usage of this module.]])
 
 -- Display a message when loading the module
 if (mode() == "load") then
-    LmodMessage(appt_root)
-    LmodMessage("[" .. current_datetime .. "] Loading module " .. app_full_name)
+    io.stderr:write("[" .. current_datetime .. "] Loading module " .. app_full_name .. "\n")
 end
 
 -- Display a message when unloading the module
 if (mode() == "unload") then
-    LmodMessage("[" .. current_datetime .. "] Unloading module " .. app_full_name)
+    io.stderr:write("[" .. current_datetime .. "] Unloading module " .. app_full_name .. "\n")
 end
 
 -- Modify environment variables if the directories exist
 if (isDir(pathJoin(app_root, "bin"))) then
     prepend_path("PATH", pathJoin(app_root, "bin"))
 else
-    LmodMessage("WARNING: No bin directory found in " .. app_root)
+    io.stderr:write("WARNING: No bin directory found in " .. app_root .. "\n")
 end
 if (isDir(pathJoin(app_root, "lib"))) then
     prepend_path("LD_LIBRARY_PATH", pathJoin(app_root, "lib"))
