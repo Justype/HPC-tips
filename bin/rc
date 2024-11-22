@@ -7,23 +7,29 @@
 # 
 # You can change remote to where you want to sync.
 
-remote=remote_name:path
+remote=
+
+# Colors
+RED='\033[0;31m'
+BLUE='\033[0;34m'
+NC='\033[0m'
 
 if [ $# == 0 ] || [[ $1 =~ ^(-h|--help)$ ]]; then
     printf "RC is a shortcut for Rclone to copy or sync with same structure.\n\n"
     printf "SYNOPSIS\n"
-    printf "    rc [direction] [options] path\n"
+    printf "    rc [instruction] [options] path\n"
     printf "    rc set remote\n"
-    printf "DIRECTION\n"
-    printf "    from|f|1)  from remote to local (default)\n"
-    printf "    to|t|2)    to remote from local\n"
+    printf "INSTRUCTION\n"
+    printf "    from|f|1)    from remote to local (default)\n"
+    printf "    to|t|2)      to remote from local\n"
+    printf "    ls|lsd|ncdu) list remote files\n"
     printf "OPTIONS\n"
     printf "    -s         sync \"folder\" (one way)\n"
     printf "    -y         yes, no ask\n"
     printf "    -a         all files (include hidden)\n"
     printf "NOTE\n"
     printf "    This tool aims to run at home directory and below.\n"
-    printf "    Current Remote:\e[34m $remote\e[00m\n"
+    printf "    Current Remote: ${BLUE}$remote${NC}\n"
     printf "    If path does not exit at local, do not use absolute or dot path.\n"
     printf "EXAMPLES\n"
     printf "    rc 2 -s .  # sync current directory to remote\n"
@@ -32,23 +38,34 @@ if [ $# == 0 ] || [[ $1 =~ ^(-h|--help)$ ]]; then
     printf "\n"
     exit
 elif [[ $1 =~ ^(-v|--version)$ ]];then
-    printf "v1.7.0\n"
+    printf "v1.8.1\n"
     exit
 fi
 
+#region functions
 set_remote () {
     # parameters: 1. name 2. file
     # Change Line 10 of this file
     # On Mac this may have issue
     sed -i "10s/.*/remote=$1/" $2
-    printf "set remote to\n"
-    sed "10!d" $2
+    printf "set line 10 to "
+    printf "${BLUE}$(sed "10!d" $2)${NC}\n"
 }
 
-# check first parameter is direction or not
+# record command exit status, if 1 then exit 1
+run_command () {
+    $@
+    if [ $? == 1 ]; then
+        exit 1
+    fi
+}
+#endregion
+
+# check first parameter is instruction or not
 case $1 in
-    from|f|1)   direction=from;     shift;;
-    to|t|2)     direction=to;       shift;;
+    from|f|1)    instruction=from;           shift;;
+    to|t|2)      instruction=to;             shift;;
+    ls|lsd|ncdu) instruction=$1; decision=y; shift;;
     set)
         if [ -z $2 ]; then
             printf "Please provide a remote name.\n"
@@ -58,18 +75,19 @@ case $1 in
         exit
         ;;
     *)
-        printf "No direction provided. Remote to local by default.\n"
-        direction=from
+        printf "No instruction provided! ${RED}Remote to local${NC} by default.\n"
+        instruction=from
         ;;
 esac
 
 # check if remote is blank
 if [ -z $remote ]; then
-    printf "Initialization required. Please provide the remote:path\n"
-    printf "e.g. google:backup/hpc\n"
+    printf "${RED}Initialization required${NC}! Example ${BLUE}gdrive:backup${NC}.\n"
+    printf "Please enter your ${BLUE}remote:path${NC}: "
     read input
     if [ -z $input ]; then
         printf "Initialization failed. No remote path.\n"
+        exit 1
     else
         set_remote $input $0
     fi
@@ -89,6 +107,7 @@ do
         s) option="sync -i";;
         y) decision=y;;
         a) option_all=y;;
+        ?) printf "${RED}Unknown option: $OPTARG${NC}\n"; exit 1;;
     esac
 done
 
@@ -107,8 +126,8 @@ while test $# -gt 0; do
 done
 
 if [ -z $path ]; then
-    printf "No path provided.\n"
-    exit
+    printf "No path provided. Use PWD!\n"
+    path=`pwd`
 fi
 # Try to auto-detect the type of path
 if [[ -z $option ]]; then
@@ -118,12 +137,12 @@ if [[ -z $option ]]; then
         option="copyto -v"
     else
         # If cannot and to remote
-        if [ $direction == "to" ]; then
-            printf "Please provide an existing path.\n"
-            exit
+        if [ $instruction == "to" ]; then
+            printf "Please provide an ${RED}existing${NC} path.\n"
+            exit 1
         # If cannot and from remote
-        elif [ $direction == "from" ]; then
-            printf "File not found: file type is determined by the / at the end. "
+        elif [ $instruction == "from" ]; then
+            printf "${RED}File not found${NC}: file type is determined by the / at the end. "
             if [[ $path =~ /$ ]]; then
                 printf "YES => copy\n"
                 option="copy -v"
@@ -167,15 +186,15 @@ if ! [[ $local_path =~ ^$HOME ]]; then
     exit 1
 fi
 
-# if ! [ -z $LMOD_CMD ]; then
-#     # on HPC and load the module
-#     module load rclone/1.60.1
-# fi
-
 # remove first N characters, N = length of home path + 1
 #local_path=$current_path/$path
 path_length=`expr ${#HOME} + 1`
-remote_path=$remote/${local_path:$path_length}
+# If remote_path ends with :, do not add /
+if [[ $remote =~ :$ ]]; then
+    remote_path=${remote}${local_path:$path_length}
+else
+    remote_path=${remote}/${local_path:$path_length}
+fi
 
 # other options
 if [[ $option_all != "y" ]] && [[ $option != "copyto -v" ]]; then
@@ -187,22 +206,19 @@ if [[ $option == "sync -i" ]] && [[ $decision == "y" ]]; then
     option="sync -v"
 fi
 
-case $direction in
-    from) 
-        command="rclone $option $other_option $remote_path $local_path"
-        ;;
-    to)
-        command="rclone $option $other_option $local_path $remote_path"
-        ;;
+case $instruction in
+    from) command="rclone $option $other_option $remote_path $local_path";;
+    to)   command="rclone $option $other_option $local_path $remote_path";;
+    ls|lsd|ncdu)   command="rclone $instruction $remote_path";;
 esac
 
-printf "[Command] $command\n"
+printf "${BLUE}[Command]${NC} $command\n"
 if [ -z $decision ]; then
     read -p "Are you sure do this? [y/N] " decision
 fi
 
 if [[ $decision == "y" ]]; then
-    $command
+    run_command $command
 else
     exit
 fi
