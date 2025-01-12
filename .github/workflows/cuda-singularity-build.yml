@@ -27,14 +27,14 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt-get update && sudo apt-get install -y \
-            build-essential libssl-dev uuid-dev \
-            libgpgme11-dev squashfs-tools libseccomp-dev \
-            pkg-config libfuse2 fuse2fs gdebi-core
+            build-essential libc6 libfuse2 libglib2.0-0 \
+            libseccomp2 zlib1g crun cryptsetup-bin fuse \
+            fuse2fs squashfs-tools uidmap
       
       - name: Install Singularity
         run: |
           wget -nv -O /tmp/singularity.deb  https://github.com/sylabs/singularity/releases/download/v4.2.2/singularity-ce_4.2.2-jammy_amd64.deb
-          sudo gdebi /tmp/singularity.deb
+          sudo dpkg -i /tmp/singularity.deb
           rm /tmp/singularity.deb
     
       - name: Build Singularity Container

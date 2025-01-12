@@ -36,7 +36,7 @@ From: nvidia/cuda:12.6.2-devel-ubuntu22.04
 
     # may want to use python virtual environment
     apt -y install python3-pip python3-venv python-is-python3
-    
+
     # dependencies for pytorch
     apt -y install libglib2.0-0 libsm6 libxrender1 libxext6
 
@@ -62,7 +62,6 @@ From: nvidia/cuda:12.6.2-devel-ubuntu22.04
     wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
     # add the R 4.0 repo from CRAN -- adjust 'focal' to 'groovy' or 'bionic' as needed
     add-apt-repository -y "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/"
-
     apt -y install r-base-dev=4.4.1-3.2204.0
 
     # rstudio-server and dependencies
