@@ -8,10 +8,10 @@ name: cuda-singularity-build
 on:
   push:
     paths:
-      - singularity-def/cuda-nvim-code-rstudio.def
+      - singularity-def/rstudo-nvim.def
   pull_request:
     paths:
-      - singularity-def/cuda-nvim-code-rstudio.def
+      - singularity-def/rstudo-nvim.def
 jobs:
   build-singularity:
     runs-on: ubuntu-22.04
@@ -39,7 +39,7 @@ jobs:
     
       - name: Build Singularity Container
         run: |
-          sudo singularity build cuda-nvim-code-rstudio.sif singularity-def/cuda-nvim-code-rstudio.def
+          sudo singularity build rstudio-nvim.sif singularity-def/rstudio-nvim.def
     
       - name: Release Singularity Container
         uses: elgohr/Github-Release-Action@v5
@@ -48,5 +48,4 @@ jobs:
         with:
           title: Singularity Container (cuda-nvim-code-rstudio)
           allowUpdates: true
-          artifacts: cuda-nvim-code-rstudio.sif,singularity-def/cuda-nvim-code-rstudio.def
-        
+          artifacts: rstudio-nvim.sif,singularity-def/rstudio-nvim.def

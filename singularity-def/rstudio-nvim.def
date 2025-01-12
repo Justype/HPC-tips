@@ -1,0 +1,69 @@
+Bootstrap: docker
+From: rocker/rstudio:4.4
+
+%labels
+  ubuntu24 neovim rstudio
+
+%environment
+  export LC_ALL=C
+  export LANG=C.UTF-8
+  export TZ="America/New_York"
+  unset which
+
+%runscript
+  exec /bin/bash "$@"	
+
+%post
+    apt -y update
+    apt -y upgrade
+
+    export DEBIAN_FRONTEND=noninteractive
+    
+    # to change time zone to EST
+    export TZ="America/New_York"
+    apt install tzdata
+    rm -rf /etc/localtime
+    cp -rp /usr/share/zoneinfo/EST /etc/localtime
+
+    # common dependencies
+    apt -y install build-essential git wget curl nano \
+                   zip tree libtool libtool-bin libicu-dev \
+                   g++ gfortran flex bison pkg-config \
+                   libx11-dev libxkbfile-dev libsecret-1-dev \
+                   ninja-build make cmake doxygen \
+                   autoconf automake
+
+    # may want to use python virtual environment
+    apt -y install python3-pip python3-venv python-is-python3
+
+    # dependencies for pytorch
+    apt -y install libglib2.0-0 libsm6 libxrender1 libxext6
+
+    # R packages dependencies
+    apt -y install libopenblas-dev libudunits2-dev libgdal-dev libmagick++-dev \
+                   libcurl4-openssl-dev libharfbuzz-dev libfribidi-dev \
+                   libglpk40 
+                   # libicu70
+    
+    # libicu70 is not available in Ubuntu 24
+    wget https://launchpad.net/ubuntu/+source/icu/70.1-2/+build/23145450/+files/libicu70_70.1-2_amd64.deb
+    dpkg -i libicu70_70.1-2_amd64.deb
+    rm libicu70_70.1-2_amd64.deb
+
+    # BCFtools dependencies libgsl
+    apt -y install libbz2-dev liblzma-dev libcurl4-gnutls-dev libssl-dev libncurses5-dev libgsl-dev libperl-dev
+
+    # neovim
+    wget https://github.com/neovim/neovim/releases/download/v0.10.2/nvim-linux64.tar.gz
+    tar xf nvim-linux64.tar.gz
+    cp -r nvim-linux64/* /usr/local/
+    rm -r nvim-linux64*
+
+    # nodejs LTS
+    curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - &&\
+        apt -y install nodejs
+
+    # tmux
+    apt -y install tmux
+
+    apt clean
