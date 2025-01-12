@@ -2,26 +2,40 @@
 # Build the Singularity container
 
 # nvim and tmux
-if [ ! -f ubuntu24.sif ]; then
-    singularity build --fakeroot ubuntu24.sif ubuntu24.def
+name=ubuntu24
+if [ ! -f $name.sif ]; then
+    singularity build --fakeroot $name.sif $name.def
 fi
 
 # CUDA 12
-if [ ! -f cuda12-ubuntu24.sif ]; then
-    singularity build cuda12-ubuntu24.sif docker://nvidia/cuda:12.6.3-cudnn-devel-ubuntu24.04
+name=cuda12-ubuntu24
+if [ ! -f $name.sqf ]; then
+    singularity build --sandbox $name docker://nvidia/cuda:12.6.3-cudnn-devel-ubuntu24.04
+    cd $name && mksquashfs * ../$name.sqf && cd ..
+    rm -rf $name
 fi
 
 # TexLive Full
-if [ ! -f texlive-ubuntu24.sif ]; then
-    singularity build --fakeroot texlive-ubuntu24.sif texlive-ubuntu24.def
+name=texlive-ubuntu24
+if [ ! -f $name.sqf ]; then
+    singularity build --sandbox --fakeroot $name $name.def
+    cd $name && mksquashfs * ../$name.sqf && cd ..
+    sudo chown -R $USER:$USER $name # sudo required if not root
+    rm -rf $name
 fi
 
 # RStudio and R 4.4
-if [ ! -f r4.4-ubuntu24.sif ]; then
-    singularity build r4.4-ubuntu24.sif docker://rocker/rstudio:4.4
+name=r4.4-ubuntu24
+if [ ! -f $name.sqf ]; then
+    singularity build --sandbox $name docker://rocker/rstudio:4.4
+    cd $name && mksquashfs * ../$name.sqf && cd ..
+    rm -rf $name
 fi
 
 # make
-if [ ! -f make-ubuntu24.sif ]; then
-    singularity build --fakeroot make-ubuntu24.sif make-ubuntu24.def
+name=make-ubuntu24
+if [ ! -f $name.sqf ]; then
+    singularity build --sandbox --fakeroot $name $name.def
+    cd $name && mksquashfs * ../$name.sqf && cd ..
+    rm -rf $name
 fi

@@ -7,8 +7,8 @@ name: singularity-make-ubuntu24
 #################################
 on:
   push:
-    paths:
-      - singularity-def/ubuntu24/make-ubuntu24.def
+    tags:
+      - "ubuntu24-*"
 jobs:
   build-singularity:
     runs-on: ubuntu-22.04
@@ -38,7 +38,15 @@ jobs:
     
       - name: Build Singularity Container
         run: |
-          sudo singularity build make-ubuntu24.sif singularity-def/ubuntu24/make-ubuntu24.def
+          cd singularity-def/ubuntu24
+          singularity build --fakeroot ubuntu24.sif ubuntu24.def
+
+      - name: Build Make SquashFS
+        run: |
+          cd singularity-def/ubuntu24
+          singularity build --sandbox --fakeroot make-ubuntu24 make-ubuntu24.def
+          cd make-ubuntu24 && mksquashfs * ../make-ubuntu24.sqf && cd ..
+          rm -rf make-ubuntu24
     
       - name: Release Singularity Container
         uses: softprops/action-gh-release@v2

@@ -13,7 +13,7 @@
    - (If you want to make some changes or add somethings to existing image, you can use it.)
    - Like in Greene, we have `--overlay /scratch/work/public/singularity/r4.2.0-ubuntu22.04-20220614.sqf:ro`
    - `.sqf` will be loaded on root (`/`).
-   - You can also build your `.sqf` like this: [build-r-squashfs.sh](singularity-def/build-r-squashfs.sh)
+   - Build `.sqf` from `.def`: [build-singularity.sh](./singularity-def/ubuntu24/build-singularity.sh)
 
 ## Beautify Singularity Shell
 
