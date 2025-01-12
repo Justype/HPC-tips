@@ -1,4 +1,4 @@
-name: singularity-rstudio-nvim
+name: singularity-make-ubuntu24
 #################################
 # This workflow builds a Singularity container from a Singularity definition file
 # and releases it as a GitHub release asset
@@ -7,13 +7,8 @@ name: singularity-rstudio-nvim
 #################################
 on:
   push:
-    tags:
-      - 'rstudio-nvim'
     paths:
-      - singularity-def/rstudio-nvim.def
-  # pull_request:
-  #   paths:
-  #     - singularity-def/rstudio-nvim.def
+      - singularity-def/ubuntu24/make-ubuntu24.def
 jobs:
   build-singularity:
     runs-on: ubuntu-22.04
@@ -43,10 +38,13 @@ jobs:
     
       - name: Build Singularity Container
         run: |
-          sudo singularity build rstudio-nvim.sif singularity-def/rstudio-nvim.def
+          sudo singularity build make-ubuntu24.sif singularity-def/ubuntu24/make-ubuntu24.def
     
       - name: Release Singularity Container
-        uses: ncipollo/release-action@v1
+        uses: softprops/action-gh-release@v2
         with:
-          allowUpdates: true
-          artifacts: rstudio-nvim.sif,singularity-def/rstudio-nvim.def
+          name: "Ubuntu24"  # Custom static release name
+          body_path: singularity-def/ubuntu24/README.md  # Release notes
+          files: |
+            make-ubuntu24.sif
+            singularity-def/ubuntu24/make-ubuntu24.def

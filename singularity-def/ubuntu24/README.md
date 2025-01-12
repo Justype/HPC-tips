@@ -1,0 +1,5 @@
+- `cuda12-ubuntu24.sif`: Ubuntu24 with CUDA and cuDNN
+- `make-ubuntu24.sif`: Ubuntu24 with build tools and dependencies
+- `r4.4-ubuntu24.sif`: Ubuntu24 with R4.4 and RStudio
+- `texlive-ubuntu24.sif`: Ubuntu24 with TexLive Full and Pandoc
+- `ubuntu24.sif`: Ubuntu24 with neovim nodejs

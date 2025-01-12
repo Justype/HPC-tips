@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: ubuntu:24.04
+
+%labels
+  ubuntu:24.04 texlive
+
+%runscript
+  exec /bin/bash "$@"	
+
+%post
+  apt -y update && apt -y upgrade
+  apt -y install texlive-full pandoc
+  apt clean

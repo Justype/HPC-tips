@@ -1,0 +1,28 @@
+Bootstrap: docker
+From: ubuntu:24.04
+
+%labels
+  ubuntu:24.04 neovim nodejs
+
+%runscript
+  exec /bin/bash "$@"
+
+%post
+  apt -y update && apt -y upgrade
+
+  # basic apps
+  apt -y install tree wget curl zip tmux git environment-modules
+
+  # Download and install Neovim
+  wget -nv https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
+  tar xf nvim-linux64.tar.gz -C /usr/local --strip-components=1
+  rm nvim-linux64.tar.gz
+
+  # Node.js LTS for Coc.nvim and GitHub Copilot Plugin
+  curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - &&\
+  apt -y install nodejs
+    
+  # personal apps
+  apt -y install bat zoxide rclone
+
+  apt clean

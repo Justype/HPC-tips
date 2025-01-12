@@ -1,0 +1,33 @@
+Bootstrap: docker
+From: ubuntu:24.04
+
+%labels
+  ubuntu:24.04 make dependencies
+
+%runscript
+  exec /bin/bash "$@"
+
+%post
+  apt -y update && apt -y upgrade
+
+  ## C and C++
+  apt -y install \
+    build-essential pkg-config git wget curl zip \
+    g++ clang gfortran \
+    ninja-build make cmake doxygen autoconf automake
+
+  ## Python
+  apt -y install python3-pip python3-venv python-is-python3
+  # PyTorch
+  apt -y install libglib2.0-0 libsm6 libxrender1 libxext6
+
+  ## Bioinfo Tools
+  # BCFtools
+  apt -y install libgsl-dev libperl-dev
+
+  ## R packages
+  # libicu70
+  wget -nv -O libicu70.deb https://launchpad.net/ubuntu/+source/icu/70.1-2/+build/23145450/+files/libicu70_70.1-2_amd64.deb
+  dpkg -i libicu70.deb && rm libicu70.deb
+
+  apt clean
