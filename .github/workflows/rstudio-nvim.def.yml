@@ -1,4 +1,4 @@
-name: cuda-singularity-build
+name: singularity-rstudio-nvim
 #################################
 # This workflow builds a Singularity container from a Singularity definition file
 # and releases it as a GitHub release asset
@@ -8,10 +8,10 @@ name: cuda-singularity-build
 on:
   push:
     paths:
-      - singularity-def/rstudo-nvim.def
+      - singularity-def/rstudio-nvim.def
   pull_request:
     paths:
-      - singularity-def/rstudo-nvim.def
+      - singularity-def/rstudio-nvim.def
 jobs:
   build-singularity:
     runs-on: ubuntu-22.04
