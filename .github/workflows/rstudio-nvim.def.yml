@@ -8,9 +8,9 @@ name: singularity-rstudio-nvim
 on:
   push:
     tags:
-      - 'rstudio-nvim.def'
-  #   paths:
-  #     - singularity-def/rstudio-nvim.def
+      - 'rstudio-nvim'
+    paths:
+      - singularity-def/rstudio-nvim.def
   # pull_request:
   #   paths:
   #     - singularity-def/rstudio-nvim.def
@@ -48,6 +48,5 @@ jobs:
       - name: Release Singularity Container
         uses: ncipollo/release-action@v1
         with:
-          title: Singularity Container (cuda-nvim-code-rstudio)
           allowUpdates: true
           artifacts: rstudio-nvim.sif,singularity-def/rstudio-nvim.def
