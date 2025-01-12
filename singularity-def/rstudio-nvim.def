@@ -42,7 +42,7 @@ From: rocker/rstudio:4.4
     # R packages dependencies
     apt -y install libopenblas-dev libudunits2-dev libgdal-dev libmagick++-dev \
                    libcurl4-openssl-dev libharfbuzz-dev libfribidi-dev \
-                   libglpk40 
+                   libglpk40
                    # libicu70
     
     # libicu70 is not available in Ubuntu 24
