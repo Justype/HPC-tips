@@ -54,5 +54,5 @@ jobs:
           name: "Ubuntu24"  # Custom static release name
           body_path: singularity-def/ubuntu24/README.md  # Release notes
           files: |
-            make-ubuntu24.sif
-            singularity-def/ubuntu24/make-ubuntu24.def
+            singularity-def/ubuntu24/ubuntu24.sif
+            singularity-def/ubuntu24/make-ubuntu24.sqf
