@@ -1,7 +1,8 @@
 #!/bin/bash
 
 repository="https://cloud.r-project.org/bin/linux/ubuntu/jammy-cran40/"
-r_package_version="4.4.1-1.2204.0"  # Desired version, Check the repository!
+# use available version on that site
+r_package_version="4.3.3"
 
 # Fetch the list of .deb files and filter them for the version
 debs=$(curl -s $repository | grep -oP 'href="\K[^"]+\.deb(?=.*'"$r_package_version"')(?!.*\.tar\.xz)')
@@ -22,10 +23,7 @@ done
 cp ./Renviron tmp/etc/R/Renviron
 
 # mksquashfs
-cd tmp
-mksquashfs * r${r_package_version}.squshfs
+cd tmp && mksquashfs * ../r${r_package_version}.sqf && cd ..
 
 # clean files
-mv r${r_package_version}.squshfs ..
-cd ..
 rm -r tmp *.deb
