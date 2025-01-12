@@ -46,7 +46,7 @@ From: rocker/rstudio:4.4
                    # libicu70
     
     # libicu70 is not available in Ubuntu 24
-    wget https://launchpad.net/ubuntu/+source/icu/70.1-2/+build/23145450/+files/libicu70_70.1-2_amd64.deb
+    wget -nv https://launchpad.net/ubuntu/+source/icu/70.1-2/+build/23145450/+files/libicu70_70.1-2_amd64.deb
     dpkg -i libicu70_70.1-2_amd64.deb
     rm libicu70_70.1-2_amd64.deb
 
@@ -54,7 +54,7 @@ From: rocker/rstudio:4.4
     apt -y install libbz2-dev liblzma-dev libcurl4-gnutls-dev libssl-dev libncurses5-dev libgsl-dev libperl-dev
 
     # neovim
-    wget https://github.com/neovim/neovim/releases/download/v0.10.2/nvim-linux64.tar.gz
+    wget -nv https://github.com/neovim/neovim/releases/download/v0.10.2/nvim-linux64.tar.gz
     tar xf nvim-linux64.tar.gz
     cp -r nvim-linux64/* /usr/local/
     rm -r nvim-linux64*
