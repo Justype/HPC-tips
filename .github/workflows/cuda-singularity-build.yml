@@ -1,0 +1,56 @@
+name: cuda-singularity-build
+#################################
+# This workflow builds a Singularity container from a Singularity definition file
+# and releases it as a GitHub release asset
+# Reference:
+# - https://github.com/singularityhub/github-ci/blob/master/.github/workflows/native-install.yml
+#################################
+on:
+  push:
+    paths:
+      - singularity-def/cuda-nvim-code-rstudio.def
+  pull_request:
+    paths:
+      - singularity-def/cuda-nvim-code-rstudio.def
+jobs:
+  build-singularity:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Set up Go 1.23.4
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.23.4
+      
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update && sudo apt-get install -y \
+            build-essential \
+            libssl-dev \
+            uuid-dev \
+            libgpgme11-dev \
+            squashfs-tools \
+            libseccomp-dev \
+            pkg-config
+      
+      - name: Install Singularity
+        run: |
+          wget -O /tmp/singularity.deb  https://github.com/sylabs/singularity/releases/download/v4.2.2/singularity-ce_4.2.2-jammy_amd64.deb
+          sudo dpkg -i /tmp/singularity.deb
+          rm /tmp/singularity.deb
+    
+      - name: Build Singularity Container
+        run: |
+          sudo singularity build cuda-nvim-code-rstudio.sif singularity-def/cuda-nvim-code-rstudio.def
+    
+      - name: Release Singularity Container
+        uses: elgohr/Github-Release-Action@v5
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          title: Singularity Container (cuda-nvim-code-rstudio)
+          allowUpdates: true
+          artifacts: cuda-nvim-code-rstudio.sif,singularity-def/cuda-nvim-code-rstudio.def
+        

@@ -1,8 +1,8 @@
 Bootstrap: docker
-From: nvidia/cuda:12.1.0-devel-ubuntu22.04
+From: nvidia/cuda:12.6.2-devel-ubuntu22.04
 
 %labels
-  nvidia/cuda:12.1.0-devel-ubuntu22.04 neovim code-server rstudio-server
+  nvidia/cuda:12.6.2-devel-ubuntu22.04 neovim code-server rstudio-server
 
 %environment
   export LC_ALL=C
@@ -59,10 +59,10 @@ From: nvidia/cuda:12.1.0-devel-ubuntu22.04
     # To verify key, run gpg --show-keys /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc 
     # Fingerprint: E298A3A825C0D65DFD57CBB651716619E084DAB9
     wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
-    # add the R 4.0 repo from CRAN -- adjust 'focal' to 'groovy', 'jammy' or 'bionic' as needed
+    # add the R 4.0 repo from CRAN -- adjust 'focal' to 'groovy' or 'bionic' as needed
     add-apt-repository -y "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/"
 
-    apt -y install r-base-dev
+    apt -y install r-base-dev=4.4.1-3.2204.0
 
     # rstudio-server and dependencies
     apt -y install lib32gcc-s1 lib32stdc++6 libc6-i386 libclang-14-dev \
@@ -82,6 +82,9 @@ From: nvidia/cuda:12.1.0-devel-ubuntu22.04
     #wget https://launchpad.net/ubuntu/+source/icu/70.1-2/+build/23145450/+files/libicu70_70.1-2_amd64.deb
     #dpkg -i libicu70_70.1-2_amd64.deb
     #rm libicu70_70.1-2_amd64.deb
+
+    ## BCFtools dependencies libgsl
+    apt -y install libbz2-dev liblzma-dev libcurl4-gnutls-dev libssl-dev libncurses5-dev libgsl-dev libperl-dev
 
     # rclone sync tools
     apt -y install rclone
