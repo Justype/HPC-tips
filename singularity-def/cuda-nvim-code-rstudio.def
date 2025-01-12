@@ -36,6 +36,7 @@ From: nvidia/cuda:12.6.2-devel-ubuntu22.04
 
     # may want to use python virtual environment
     apt -y install python3-pip python3-venv python-is-python3
+    
     # dependencies for pytorch
     apt -y install libglib2.0-0 libsm6 libxrender1 libxext6
 
