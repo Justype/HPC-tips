@@ -1,0 +1,22 @@
+Bootstrap: docker
+From: ubuntu:24.04
+%labels
+  ubuntu:24.04 r-base-dev:4.4.2
+
+%runscript
+  exec /bin/bash "$@"
+
+%post
+  apt -y update&& apt -y upgrade
+  export DEBIAN_FRONTEND=noninteractive
+
+  # R-base
+  # install two helper packages we need
+  apt -y install --no-install-recommends software-properties-common dirmngr wget
+  wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
+
+  # add the R 4.0 repo from CRAN
+  add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu noble-cran40/"
+  apt -y update && apt -y install r-base-dev=4.4.2-1.2404.0
+
+  apt clean
