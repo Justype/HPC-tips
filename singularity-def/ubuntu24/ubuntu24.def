@@ -4,11 +4,22 @@ From: ubuntu:24.04
 %labels
   ubuntu:24.04 neovim nodejs
 
+%environment
+  export LC_ALL=C.UTF-8
+  export LANG=C.UTF-8
+  export TZ="America/Toronto"
+
 %runscript
   exec /bin/bash "$@"
 
 %post
   apt -y update && apt -y upgrade
+
+  # to change time zone to EST
+  export TZ="America/Toronto"
+  apt-get install tzdata
+  rm -rf /etc/localtime
+  cp -rp /usr/share/zoneinfo/EST /etc/localtime
 
   # basic apps
   apt -y install tree wget curl zip tmux git environment-modules

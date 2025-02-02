@@ -1,0 +1,28 @@
+Bootstrap: docker
+From: ubuntu:24.04
+
+%labels
+  ubuntu:24.04 lxde
+
+%runscript
+  exec /bin/bash "$@"
+
+%post
+  apt -y update && apt -y upgrade
+
+  # Desktop
+  apt -y install lxde openbox-lxde-session
+
+  # FireFox
+  apt -y install software-properties-common
+  add-apt-repository -y ppa:mozillateam/ppa
+  apt -y install firefox-esr
+
+  # vnc
+  apt -y install x11vnc tigervnc-standalone-server \
+    novnc xvfb xorg dbus-x11 xserver-xorg-video-dummy xpra
+
+  apt clean
+
+  # xorg settings
+  echo "allowed_users = anybody" >> /etc/X11/Xwrapper.config

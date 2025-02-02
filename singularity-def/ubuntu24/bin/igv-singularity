@@ -1,0 +1,105 @@
+#!/bin/bash
+# -p novnc port (required)
+# -d Display port (0-99)
+# -h Help
+
+#SIF_HOME=/where/singularity
+
+if [ -z "$SIF_HOME" ]; then
+    echo "SIF_HOME is not set, Please set SIF_HOME to the directory where the Singularity images are located"
+    exit 1
+elif [ ! -f "$SIF_HOME/igv-ubuntu24.sif" ]; then
+    echo "Singularity image igv-ubuntu24.sif not found in $SIF_HOME"
+    exit 1
+elif [ ! -f "$SIF_HOME/lxde-ubuntu24.sif" ]; then
+    echo "Singularity image lxde-ubuntu24.sif not found in $SIF_HOME"
+    exit 1
+elif [ ! -f "$SIF_HOME/ubuntu24.sif" ]; then
+    echo "Singularity image ubuntu24.sif not found in $SIF_HOME"
+    exit 1
+fi
+
+while getopts "p:d:h" opt; do
+    case $opt in
+        p)
+            novnc_port=$OPTARG
+            ;;
+        d)
+            display_port=$OPTARG
+            ;;
+        h)
+            echo "Usage: $0 -p novnc_port [-d display_port (0-99)]"
+            exit 0
+            ;;
+    esac
+done
+
+if [ -z "$novnc_port" ]; then
+    echo "noVNC port is required"
+    echo "Usage: $0 -p novnc_port [-d display_port (0-99)]"
+    exit 1
+fi
+
+if [ -z "$display_port" ]; then
+    # from 0 to 99
+    for i in $(seq 0 99); do
+        if [ ! -f /tmp/.X${i}-lock ]; then
+            display_port=$i
+            break
+        fi
+    done
+    if [ -z "$display_port" ]; then
+        echo "No available display port"
+        exit 1
+    fi
+elif [ -f /tmp/.X${display_port}-lock ]; then
+    echo "Display port ${display_port} is already in use"
+    exit 1
+fi
+
+cleanup() {
+    singularity instance stop vnc
+    rm -f /tmp/.X${display_port}-lock
+    rm /tmp/.X11-unix/X${display_port}
+    exit 0
+}
+
+trap cleanup SIGINT
+
+mkdir -p $HOME/lxde-home # create home directory for LXDE
+mkdir -p $HOME/lxde-home/xdg_runtime
+export XDG_RUNTIME_DIR=$HOME/xdg_runtime # set XDG_RUNTIME_DIR
+
+export DISPLAY=:${display_port} # set display port
+vnc_port=$((5900 + display_port))
+
+# start singularity instance
+singularity instance start \
+    --bind $HOME/lxde-home:$HOME \
+    -o $SIF_HOME/igv-ubuntu24.sqf \
+    -o $SIF_HOME/lxde-ubuntu24.sqf \
+    $SIF_HOME/ubuntu24.sif \
+    vnc
+
+# start noVNC
+singularity exec instance://vnc websockify --web /usr/share/novnc localhost:${novnc_port} localhost:${vnc_port} &> /dev/null &
+# echo the noVNC URL
+echo noVNC URL: http://localhost:${novnc_port}/vnc.html
+
+# start tigervnc with desktop environment
+singularity exec instance://vnc vncserver $DISPLAY \
+    -geometry 1600x900 -depth 24 \
+    -SecurityTypes None \
+    -rfbport ${vnc_port} \
+    -fg -xstartup /usr/bin/startlxde &> /dev/null &
+# change mode of X server directory
+owner=$(stat -c %U /tmp/.X11-unix)
+if [ "$owner" != "$USER" ]; then
+    chmod -t /tmp/.X11-unix
+    chmod 777 /tmp/.X11-unix
+fi
+
+singularity exec instance://vnc igv &> /dev/null
+
+# cleanup
+cleanup

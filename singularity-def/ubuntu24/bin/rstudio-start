@@ -1,0 +1,68 @@
+#!/bin/bash
+####################################
+# This script starts RStudio Server using Singularity
+# If conda is activated, it will use R from conda
+# Otherwise, it will use R from the Singularity image
+####################################
+
+if [[ -z $1 ]] || [[ $1 =~ ^(-h|--help)$ ]]; then
+    printf "start singularity rstudio-server with provided port\n\n"
+    printf "SYNOPSIS\n"
+    printf "    rstudio-start port\n"
+    printf "PORT:\n"
+    printf "    port you want to use, e.g. 8787\n"
+    printf "\n"
+    exit
+fi
+
+#SIF_HOME=/where/singularity
+
+if [ -z "$SIF_HOME" ]; then
+    echo "SIF_HOME is not set, Please set SIF_HOME to the directory where the Singularity images are located"
+    exit 1
+elif [ ! -f "$SIF_HOME/texlive-ubuntu24.sqf" ]; then
+    echo "Singularity image texlive-ubuntu24.sqf not found in $SIF_HOME"
+    exit 1
+elif [ ! -f "$SIF_HOME/rstudio-ubuntu24.sqf" ]; then
+    echo "Singularity image rstudio-ubuntu24.sqf not found in $SIF_HOME"
+    exit 1
+elif [ ! -f "$SIF_HOME/r4.4.2-ubuntu24.sqf" ]; then
+    echo "Singularity image r4.4.2-ubuntu24.sqf not found in $SIF_HOME"
+    exit 1
+elif [ ! -f "$SIF_HOME/make-ubuntu24.sqf" ]; then
+    echo "Singularity image make-ubuntu24.sqf not found in $SIF_HOME"
+    exit 1
+elif [ ! -f "$SIF_HOME/ubuntu24.sif" ]; then
+    echo "Singularity image ubuntu24.sif not found in $SIF_HOME"
+    exit 1
+fi
+
+CWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+
+printf "http://localhost:$1\n\n"
+
+if [[ -z $CONDA_PREFIX ]]; then
+    printf "conda not activated! Using /usr/bin/R in SQF\n"
+    singularity exec \
+        --env PS1='S \w > ' \
+        -o $SIF_HOME/texlive-ubuntu24.sqf \
+        -o $SIF_HOME/rstudio-ubuntu24.sqf \
+        -o $SIF_HOME/r4.4.2-ubuntu24.sqf \
+        -o $SIF_HOME/make-ubuntu24.sqf \
+        $SIF_HOME/ubuntu24.sif \
+        bash ${CWD}/rstudio-config/start_rstudio_server.sh $1
+fi
+
+if ! [[ -f "$CONDA_PREFIX/bin/R"  ]]; then
+    printf "R does not exist in $CONDA_DEFAULT_ENV\n"
+    exit
+fi
+
+# $1 is the port
+singularity exec \
+    --env PS1='S \w > ' \
+    -o $SIF_HOME/texlive-ubuntu24.sqf \
+    -o $SIF_HOME/rstudio-ubuntu24.sqf \
+    -o $SIF_HOME/make-ubuntu24.sqf \
+    $SIF_HOME/ubuntu24.sif \
+    ${CWD}/rstudio-config/start_rstudio_server_conda.sh $1

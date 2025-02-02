@@ -4,7 +4,7 @@
 # nvim and tmux
 name=ubuntu24
 if [ ! -f $name.sif ]; then
-    singularity build --fakeroot $name.sif $name.def
+    sudo singularity build $name.sif $name.def
 fi
 
 # CUDA 12
@@ -15,7 +15,7 @@ if [ ! -f $name.sqf ]; then
     rm -rf $name
 fi
 
-names=(texlive-ubuntu24 rstudio-ubuntu24 r4.4.2-ubuntu24 make-ubuntu24)
+names=(texlive-ubuntu24 rstudio-ubuntu24 r4.4.2-ubuntu24 make-ubuntu24 igv-ubuntu24 lxde-ubuntu24)
 for name in ${names[@]}; do
     if [ ! -f $name.sqf ]; then
         singularity build --sandbox --fakeroot $name $name.def
