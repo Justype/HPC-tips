@@ -29,5 +29,11 @@ From: ubuntu:24.04
   # libicu70
   wget -nv -O libicu70.deb https://launchpad.net/ubuntu/+source/icu/70.1-2/+build/23145450/+files/libicu70_70.1-2_amd64.deb
   dpkg -i libicu70.deb && rm libicu70.deb
+  apt -y install libcurl4-openssl-dev # curl
+  apt -y install libcairo2-dev        # Cario
+  apt -y install libmagick++-dev      # magick
+  apt -y install libharfbuzz-dev libfribidi-dev libfreetype6-dev # textshaping
+  apt -y install libudunits2-dev      # units
+  apt -y install libgdal-dev libgeos-dev libproj-dev # sf
 
   apt clean
