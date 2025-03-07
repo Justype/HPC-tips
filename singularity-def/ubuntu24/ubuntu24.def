@@ -25,14 +25,17 @@ From: ubuntu:24.04
   apt -y install tree wget curl zip tmux git environment-modules
 
   # Download and install Neovim
-  wget -nv https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
-  tar xf nvim-linux64.tar.gz -C /usr/local --strip-components=1
-  rm nvim-linux64.tar.gz
+  wget -nv https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+  tar xf nvim-linux-x86_64.tar.gz -C /usr/local --strip-components=1
+  rm nvim-linux-x86_64.tar.gz
 
   # Node.js LTS for Coc.nvim and GitHub Copilot Plugin
   curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - &&\
   apt -y install nodejs
-    
+
+  # Code-server
+  curl -fsSL https://code-server.dev/install.sh | sh
+
   # personal apps
   apt -y install bat zoxide rclone
 
