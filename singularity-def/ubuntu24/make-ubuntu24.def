@@ -34,6 +34,9 @@ From: ubuntu:24.04
   apt -y install libmagick++-dev      # magick
   apt -y install libharfbuzz-dev libfribidi-dev libfreetype6-dev # textshaping
   apt -y install libudunits2-dev      # units
-  apt -y install libgdal-dev libgeos-dev libproj-dev # sf
+  apt -y install libgdal-dev libgeos-dev libproj-dev libsqlite3-dev gdal-bin # sf
+  apt -y install libabsl-dev # s2
+  apt -y install libglpk-dev # scDblFinder
+  apt -y install libhdf5-dev # BPCells
 
   apt clean
