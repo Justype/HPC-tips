@@ -1,0 +1,16 @@
+Bootstrap: docker
+From: ubuntu:24.04
+
+%labels
+  ubuntu:24.04 code-server
+
+%runscript
+  exec /bin/bash "$@"	
+
+%post
+  apt -y update && apt -y upgrade
+  # Dependencies
+  apt -y install curl
+  curl -fsSL https://code-server.dev/install.sh | sh
+
+  apt clean
